@@ -1,0 +1,21 @@
+[
+    {
+        "imageUrl": "https://s21-kling.klingai.com/ai-platform/.../portrait.jpg",
+        "text": "Hello there! Welcome to our product demo.",
+        "speakerId": "moss_audio_ad5baf92-735f-11f0-8263-fe5a2fe98ec8",
+        "mode": "std"
+    },
+    {
+        "avatarId": "300137233318846",
+        "text": "This avatar was saved once and reused by id. List your voices with GET /tts/voices.",
+        "speakerId": "moss_audio_ad5baf92-735f-11f0-8263-fe5a2fe98ec8",
+        "emotion": "happy",
+        "speed": 1.0,
+        "mode": "std"
+    },
+    {
+        "imageUrl": "https://s21-kling.klingai.com/ai-platform/.../portrait.jpg",
+        "audioUrl": "https://example.com/voiceover.mp3",
+        "mode": "pro"
+    }
+]

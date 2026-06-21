@@ -1,0 +1,31 @@
+[
+    {
+        "prompt": "A single-shot Omni job: by default the v3 model with a 16:9 aspect ratio, std (720p) mode and a 5-second duration is used."
+    },
+    {
+        "omni_version": "v3",
+        "mode": "pro",
+        "aspect_ratio": "16:9",
+        "duration": "5",
+        "image_1": "https://s21-kling.klingai.com/.../character.jpg",
+        "image_2": "https://s21-kling.klingai.com/.../garden.jpg",
+        "prompt": "Multi-image reference: A woman @image_1 walking through the garden @image_2, camera pushing in. For all parameters see https://useapi.net/docs/api-kling-v1/post-kling-videos-omni"
+    },
+    {
+        "omni_version": "v3",
+        "mode": "std",
+        "duration": "5",
+        "element_1": "u_123456789012345",
+        "prompt": "Saved Video Element by ID: Character @element_1 walking through a sunlit garden, smiling."
+    },
+    {
+        "omni_version": "v3",
+        "mode": "pro",
+        "aspect_ratio": "16:9",
+        "image_1": "https://s21-kling.klingai.com/.../kitchen.jpg",
+        "shots": [
+            { "prompt": "Cinematic medium shot, a chef standing behind a stainless steel stove @image_1, focused intently on the pan.", "duration": "3" },
+            { "prompt": "Continuous scene at the same stove @image_1. The chef flips the food high into the air, then turns sharply to the camera.", "duration": "3" }
+        ]
+    }
+]

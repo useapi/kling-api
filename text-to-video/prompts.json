@@ -1,0 +1,26 @@
+[
+    {
+        "prompt": "By default the kling-v1-6 model with a 16:9 aspect ratio, std (720p) mode and a 5-second duration will be used."
+    },
+    {
+        "model_name": "kling-v3-0",
+        "aspect_ratio": "16:9",
+        "mode": "pro",
+        "duration": "5",
+        "prompt": "A majestic mountain landscape with snow-capped peaks and flowing rivers, camera slowly panning right. For all parameters see https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video"
+    },
+    {
+        "model_name": "kling-v3-0-turbo",
+        "mode": "pro",
+        "duration": "10",
+        "prompt": "Faster Kling v3 Turbo generation. Audio is always on and the prompt can carry spoken dialogue and scene changes."
+    },
+    {
+        "model_name": "kling-v1-6",
+        "aspect_ratio": "9:16",
+        "mode": "pro",
+        "duration": "5",
+        "negative_prompt": "people, buildings, text, low quality",
+        "prompt": "negative_prompt and cfg_scale apply only to the 1.x models. Models 2.5, 2.6 and 3.0 do not support negative_prompt."
+    }
+]

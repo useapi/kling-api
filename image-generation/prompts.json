@@ -1,0 +1,13 @@
+[
+    {
+        "prompt": "By default the kling-v3-0 version with a 16:9 aspect ratio and 2k resolution is used. A serene mountain lake at golden hour, photorealistic."
+    },
+    {
+        "prompt": "A woman @image_1 dancing elegantly in a sunlit ballroom",
+        "version": "kling-v3-0",
+        "resolution": "2k",
+        "aspect_ratio": "3:4",
+        "imageCount": 2,
+        "image_1": "https://s21-kling.klingai.com/ai-platform/.../woman.jpg"
+    }
+]

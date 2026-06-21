@@ -1,0 +1,19 @@
+[
+    {
+        "model_name": "kling-v3-0",
+        "imageUrl": "https://s15-kling.klingai.com/.../person.jpg",
+        "motionUrl": "https://v15-kling.klingai.com/.../dance.mp4",
+        "prompt": "Person dancing energetically",
+        "keepAudio": true,
+        "mode": "std"
+    },
+    {
+        "model_name": "kling-v3-0",
+        "imageUrl": "https://s15-kling.klingai.com/.../person.jpg",
+        "motionUrl": "https://v15-kling.klingai.com/.../walk.mp4",
+        "prompt": "Follow the pose from the source image instead of the video's motion.",
+        "motionDirection": "image_direction",
+        "element_1": "u_123456789012345",
+        "mode": "std"
+    }
+]
