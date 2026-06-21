@@ -80,8 +80,6 @@ async function fetchAccounts(apiToken) {
     return response.json();
 }
 
-const elapsedTimeSec = (start) => (Date.now() - start) / 1000;
-
 // Submit a single text-to-video prompt. Returns { status, taskId }.
 async function submitVideo(apiToken, email, prompt, index) {
     const { model_name, prompt: text, aspect_ratio, mode, duration, negative_prompt, cfg_scale } = prompt;

@@ -84,8 +84,6 @@ async function fetchAccounts(apiToken) {
     return response.json();
 }
 
-const elapsedTimeSec = (start) => (Date.now() - start) / 1000;
-
 // A short label for logging — the single prompt, or the first shot prompt.
 function promptLabel(prompt) {
     if (prompt.prompt) return prompt.prompt;
