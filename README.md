@@ -1,6 +1,6 @@
 # Kling API examples (useapi.net)
 
-Runnable Node.js examples for the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net) — generate **Kling v3 / v2.x** video (**text-to-video**, **image-to-video**, multi-image **Omni** & multi-shot, **motion control**, **effects**, **extend**, native audio), **lip-sync avatars** with **TTS / custom voices**, and **Kolors image generation** (incl. **virtual try-on** & **upscale**) — all through a simple REST API that drives your own [Kling AI](https://app.klingai.com) account, with no developer account or per-generation metering.
+Runnable Node.js examples for the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github&utm_medium=readme&utm_campaign=kling-api) — generate **Kling v3 / v2.x** video (**text-to-video**, **image-to-video**, multi-image **Omni** & multi-shot, **motion control**, **effects**, **extend**, native audio), **lip-sync avatars** with **TTS / custom voices**, and **Kolors image generation** (incl. **virtual try-on** & **upscale**) — all through a simple REST API that drives your own [Kling AI](https://app.klingai.com) account, with no developer account or per-generation metering.
 
 Each example reads a list of prompts from `prompts.json`, submits them through the useapi.net Kling API, polls each task until it is final, and downloads every result — preferring the clean, non-watermarked master — so you can queue a batch and come back to the winners.
 
@@ -14,7 +14,7 @@ Each example reads a list of prompts from `prompts.json`, submits them through t
 
 ## Quick start
 
-You need [Node.js](https://nodejs.org) v21 or newer (no dependencies to install), a useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi), and a connected [Kling account](https://useapi.net/docs/start-here/setup-kling) (one [$15/month subscription](https://useapi.net/docs/subscription) covers every useapi.net API):
+You need [Node.js](https://nodejs.org) v21 or newer (no dependencies to install), a useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi?utm_source=github&utm_medium=readme&utm_campaign=kling-api), and a connected [Kling account](https://useapi.net/docs/start-here/setup-kling) (one [$15/month subscription](https://useapi.net/docs/subscription?utm_source=github&utm_medium=readme&utm_campaign=kling-api) covers every useapi.net API):
 
 ```bash
 git clone https://github.com/useapi/kling-api.git
@@ -32,7 +32,7 @@ node ./kling.mjs <API_TOKEN> <EMAIL>
 
 ## About useapi.net
 
-[useapi.net](https://useapi.net) is an experimental REST API for AI services. The Kling API drives your own [Kling AI](https://app.klingai.com) (Kuaishou) account, so you spend your plan's credits at consumer rates instead of metered developer-API pricing. See the [model matrix](https://useapi.net/model-matrix) and pricing on the [API overview](https://useapi.net/docs/api-kling-v1).
+[useapi.net](https://useapi.net/?utm_source=github&utm_medium=readme&utm_campaign=kling-api) is an experimental REST API for AI services. The Kling API drives your own [Kling AI](https://app.klingai.com) (Kuaishou) account, so you spend your plan's credits at consumer rates instead of metered developer-API pricing. See the [model matrix](https://useapi.net/model-matrix?utm_source=github&utm_medium=readme&utm_campaign=kling-api) and pricing on the [API overview](https://useapi.net/docs/api-kling-v1).
 
 Visit our [Discord Server](https://discord.gg/w28uK3cnmF) or [Telegram Channel](https://t.me/use_api) for any support questions and concerns.
 

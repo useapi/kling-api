@@ -1,6 +1,6 @@
 # Kling Omni — multi-reference & multi-shot video (Node.js)
 
-Batch-generate [Kling Omni](https://app.klingai.com) video through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net) — blend up to 7 image references into one shot, reuse saved **Video Elements**, and storyboard a v3 **multi-shot** sequence in a single job.
+Batch-generate [Kling Omni](https://app.klingai.com) video through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github&utm_medium=readme&utm_campaign=kling-api) — blend up to 7 image references into one shot, reuse saved **Video Elements**, and storyboard a v3 **multi-shot** sequence in a single job.
 
 📖 Full walkthrough: **[Multi-Reference & Multi-Shot Video with Kling Omni](https://useapi.net/docs/articles/kling-omni-bash)**
 
@@ -9,7 +9,7 @@ Batch-generate [Kling Omni](https://app.klingai.com) video through the [Kling AP
 ## Prerequisites
 
 - [Node.js](https://nodejs.org) v21 or newer (no dependencies to install — uses built-in `fetch`)
-- A useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi)
+- A useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi?utm_source=github&utm_medium=readme&utm_campaign=kling-api)
 - A connected [Kling account](https://useapi.net/docs/start-here/setup-kling) email
 
 ## Usage

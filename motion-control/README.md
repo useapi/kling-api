@@ -1,6 +1,6 @@
 # Kling motion control — Kling API batch generation (Node.js)
 
-Batch-transfer motion from a reference video onto a static image through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net) — the person in your image performs the action from the video.
+Batch-transfer motion from a reference video onto a static image through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github&utm_medium=readme&utm_campaign=kling-api) — the person in your image performs the action from the video.
 
 📖 Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#motion-control)**
 
@@ -9,7 +9,7 @@ Batch-transfer motion from a reference video onto a static image through the [Kl
 ## Prerequisites
 
 - [Node.js](https://nodejs.org) v21 or newer (no dependencies to install — uses built-in `fetch`)
-- A useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi)
+- A useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi?utm_source=github&utm_medium=readme&utm_campaign=kling-api)
 - A connected [Kling account](https://useapi.net/docs/start-here/setup-kling) email
 
 ## Usage
