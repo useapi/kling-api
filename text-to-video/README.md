@@ -1,6 +1,6 @@
 # Kling v3 / v2.x video — Kling API batch generation (Node.js)
 
-Batch-generate [Kling v3](https://app.klingai.com) (and v3 Turbo, 2.6, 2.5, 2.1, 1.6) text-to-video through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github&utm_medium=readme&utm_campaign=kling-api).
+Batch-generate [Kling v3](https://app.klingai.com) (and v3 Turbo, 2.6, 2.5, 2.1, 1.6) text-to-video through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
 📖 Full walkthrough: **[How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash)**
 
@@ -9,7 +9,7 @@ Batch-generate [Kling v3](https://app.klingai.com) (and v3 Turbo, 2.6, 2.5, 2.1,
 ## Prerequisites
 
 - [Node.js](https://nodejs.org) v21 or newer (no dependencies to install — uses built-in `fetch`)
-- A useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi?utm_source=github&utm_medium=readme&utm_campaign=kling-api)
+- A useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)
 - A connected [Kling account](https://useapi.net/docs/start-here/setup-kling) email
 
 ## Usage

@@ -1,6 +1,6 @@
 # Kling image generation (Kolors) — Kling API batch generation (Node.js)
 
-Batch-generate images with [KOLORS](https://app.klingai.com), Kling's image model, through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github&utm_medium=readme&utm_campaign=kling-api) — text-to-image with up to ten `@image_N` references on `kling-v3-0`.
+Batch-generate images with [KOLORS](https://app.klingai.com), Kling's image model, through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — text-to-image with up to ten `@image_N` references on `kling-v3-0`.
 
 📖 Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#image-generation-kolors)**
 
@@ -9,7 +9,7 @@ Batch-generate images with [KOLORS](https://app.klingai.com), Kling's image mode
 ## Prerequisites
 
 - [Node.js](https://nodejs.org) v21 or newer (no dependencies to install — uses built-in `fetch`)
-- A useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi?utm_source=github&utm_medium=readme&utm_campaign=kling-api)
+- A useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)
 - A connected [Kling account](https://useapi.net/docs/start-here/setup-kling) email
 
 ## Usage
