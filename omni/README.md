@@ -32,4 +32,4 @@ The placeholder `https://s21-kling.klingai.com/.../...jpg` URLs and the `u_123鈥
 
 ---
 
-Support: [Discord](https://discord.gg/w28uK3cnmF) 路 [Telegram](https://t.me/use_api) 路 [YouTube](https://www.youtube.com/@midjourneyapi)
+Support: [Discord](https://discord.gg/w28uK3cnmF) 路 [Telegram](https://t.me/use_api) 路 [YouTube](https://www.youtube.com/@useapi-net)
