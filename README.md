@@ -24,6 +24,23 @@ node ./kling.mjs <API_TOKEN> <EMAIL>
 
 `API_TOKEN` is your useapi.net token and `EMAIL` is your connected Kling account email — every script looks the account up by email automatically. Edit `prompts.json` in each folder to queue your own prompts. Every supported parameter is documented on the [POST /videos/text2video](https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video), [POST /videos/omni](https://useapi.net/docs/api-kling-v1/post-kling-videos-omni), [POST /avatars/video](https://useapi.net/docs/api-kling-v1/post-kling-avatars-video), [POST /videos/motion-create](https://useapi.net/docs/api-kling-v1/post-kling-videos-motion-create), and [POST /images/kolors](https://useapi.net/docs/api-kling-v1/post-kling-images-kolors) endpoint pages.
 
+## MCP server
+
+useapi.net also runs a hosted [Model Context Protocol](https://modelcontextprotocol.io) server for Kling, so an AI assistant such as Claude Code, Cursor or VS Code Copilot can use it on your own account. It has 45 tools: Kling 4.0, v3 and Omni video from text, images, keyframes or references, motion control, talking avatars, lip-sync, sound and extend, Omni and Kolors images, virtual try-on, upscale, plus elements, voices, avatars, uploads and tasks. Nothing to install or run locally.
+
+- Endpoint: `https://api.useapi.net/v1/kling/mcp`
+- Transport: Streamable HTTP
+- Authorization: your useapi.net API token in the `Authorization: Bearer …` header, and an account connected with the [Kling setup](https://useapi.net/docs/start-here/setup-kling?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)
+- Listed in the official MCP Registry as `net.useapi/kling`
+
+Claude Code:
+
+```bash
+claude mcp add --transport http useapi-kling https://api.useapi.net/v1/kling/mcp --header "Authorization: Bearer YOUR_API_TOKEN"
+```
+
+Cursor, VS Code, Windsurf and the full tool list: [Kling MCP server docs](https://useapi.net/docs/api-kling-v1/mcp?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api). useapi.net is a third-party API, not affiliated with Kuaishou or Kling AI.
+
 ## Tutorials
 
 - [How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash) — text-to-video and start/end-frame image-to-video, the model lineup, and pricing
