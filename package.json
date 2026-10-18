@@ -1,7 +1,7 @@
 {
   "name": "kling-api",
   "version": "1.0.0",
-  "description": "Runnable Node.js examples for the Kling API by useapi.net — Kling v3 / v2.x video (text-to-video, image-to-video, Omni multi-image & multi-shot), lip-sync avatars, motion control, and Kolors image generation.",
+  "description": "Runnable Node.js examples for the Kling API by useapi.net — Kling 4.0, v3 and v2.x video (text-to-video, image-to-video, Omni multi-image & multi-shot), lip-sync avatars, motion control, and Kolors image generation.",
   "author": "useapi.net",
   "license": "MIT",
   "type": "module",

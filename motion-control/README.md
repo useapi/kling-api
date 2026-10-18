@@ -2,7 +2,7 @@
 
 Batch-transfer motion from a reference video onto a static image through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — the person in your image performs the action from the video.
 
-📖 Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#motion-control)**
+Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#motion-control)**
 
 Videos made with this API, on YouTube: [Smooth Criminal • Kling Motion 3.0](https://youtube.com/shorts/VztjBYqqQ1A) · [Kling Motion Control / Mureka Music](https://youtube.com/shorts/TUAUO5cAlac)
 

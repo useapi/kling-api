@@ -2,7 +2,7 @@
 
 Batch-generate [Kling Omni](https://app.klingai.com) video through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — blend up to 7 image references into one shot, reuse saved **Video Elements**, and storyboard a v3 **multi-shot** sequence in a single job.
 
-📖 Full walkthrough: **[Multi-Reference & Multi-Shot Video with Kling Omni](https://useapi.net/docs/articles/kling-omni-bash)**
+Full walkthrough: **[Multi-Reference & Multi-Shot Video with Kling Omni](https://useapi.net/docs/articles/kling-omni-bash)**
 
 Videos made with this API, on YouTube: [Mission: Kitchen Impossible • Kling v3 multi-shot](https://www.youtube.com/watch?v=Ti8oHAvg7Cw) · [Kling Video O1](https://www.youtube.com/watch?v=rUcVpqwcNVY)
 

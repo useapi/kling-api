@@ -2,7 +2,7 @@
 
 Batch-generate talking [lip-sync avatar](https://app.klingai.com) videos through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — a digital character built from a single image that speaks from your text (voiced by Kling TTS) or from an audio file.
 
-📖 Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#lip-sync--avatars)**
+Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#lip-sync--avatars)**
 
 Video on YouTube: [Kling Avatar 2.0](https://youtube.com/shorts/nKw61pdzFmw)
 

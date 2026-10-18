@@ -1,0 +1,11 @@
+[
+    {
+        "__comment": "Image-to-video: put start.jpg, middle.jpg and end.jpg (png or jpg, at least 300px) next to this file, or use image URLs. Local files are uploaded with POST /assets. The aspect ratio comes from the start image. Up to 9 keyframes between image and image_tail, at most duration + 1 images and 10 in total.",
+        "mode": "std",
+        "duration": "5",
+        "image": "start.jpg",
+        "keyframe_1": "middle.jpg",
+        "image_tail": "end.jpg",
+        "prompt": "the boat drifts from the puddle into the gutter stream"
+    }
+]

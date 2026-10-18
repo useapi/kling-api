@@ -1,0 +1,24 @@
+[
+    {
+        "mode": "std",
+        "duration": "3",
+        "aspect_ratio": "16:9",
+        "prompt": "A small paper boat sails across a rain puddle on a city sidewalk at dusk, neon signs reflect and ripple in the water, raindrops patter around it and a tram bell rings in the distance, low camera at water level"
+    },
+    {
+        "__comment": "1080p (mode pro) needs a paid Kling plan. Kling 4.0 takes 3 to 30 seconds and adds the 21:9 aspect ratio. Audio is always on, in stereo.",
+        "mode": "pro",
+        "duration": "10",
+        "aspect_ratio": "21:9",
+        "prompt": "A lighthouse keeper climbs a spiral staircase at night carrying a lantern, wind howls outside, the beam sweeps across a stormy sea as he reaches the top, slow cinematic dolly"
+    },
+    {
+        "__comment": "Direct the cuts yourself: 2 to 6 shots, 3 to 15 seconds in total, in place of prompt and duration.",
+        "mode": "std",
+        "aspect_ratio": "9:16",
+        "shot_1_prompt": "Close-up of a barista pouring steamed milk into a cup, latte art forming, cafe chatter in the background",
+        "shot_1_duration": "3",
+        "shot_2_prompt": "The barista slides the cup across the counter to a smiling customer, who says: thank you, this is perfect",
+        "shot_2_duration": "4"
+    }
+]

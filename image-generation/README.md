@@ -2,7 +2,7 @@
 
 Batch-generate images with [KOLORS](https://app.klingai.com), Kling's image model, through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — text-to-image with up to ten `@image_N` references on `kling-v3-0`.
 
-📖 Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#image-generation-kolors)**
+Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#image-generation-kolors)**
 
 `kling-kolors.mjs` reads prompts from `prompts.json`, submits each one to [`POST /images/kolors`](https://useapi.net/docs/api-kling-v1/post-kling-images-kolors), polls [`GET /tasks/{task_id}`](https://useapi.net/docs/api-kling-v1/get-kling-tasks-task_id) until each task is final, and downloads every generated image from the task's `works[]` array.
 

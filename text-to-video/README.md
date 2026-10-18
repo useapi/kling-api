@@ -2,7 +2,7 @@
 
 Batch-generate [Kling 4.0](https://app.klingai.com) (and v3, v3 Turbo, 2.6, 2.5, 2.1, 1.6) text-to-video through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
-📖 Full walkthrough: **[How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash)**
+Full walkthrough: **[How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash)**
 
 Videos made with this API, on YouTube: [Christmas is Coming • Kling v2.6](https://www.youtube.com/watch?v=oqVPl9V9jIw) · [No More Tylenol • Kling v2.5](https://www.youtube.com/watch?v=dCSwOizOJKU) · [Disco Twerking • Kling 2.1-master with audio](https://youtube.com/shorts/3S1cvi7uuFg) · [No Smoking! • Kling v2.1](https://youtube.com/shorts/9iqDRfOTmn8) · [KLING 2.1 End Frame](https://youtube.com/shorts/nh333dq0grs)
 

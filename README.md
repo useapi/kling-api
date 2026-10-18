@@ -6,6 +6,7 @@ Each example reads a list of prompts from `prompts.json`, submits them through t
 
 | Example | What it does | Tutorial |
 |---|---|---|
+| [`kling-4/`](./kling-4) | Batch-generate **Kling 4.0** (`kling-v4-0`) video: 3–30 s, 720p or 1080p, stereo audio, `21:9`, directed multi-shot, and image-to-video with start, end and up to 9 keyframes | [How to Generate Kling 4.0 Video via the Kling API](https://useapi.net/docs/articles/kling-4-api?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) |
 | [`text-to-video/`](./text-to-video) | Batch-generate **Kling 4.0 / v3 / v2.x** video from text prompts (with notes on adapting it to the image-to-video frames endpoint) | [How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash) |
 | [`omni/`](./omni) | Batch-generate **Kling Omni** video — multi-image reference, saved **Video Elements**, and v3 **multi-shot** sequences | [Multi-Reference & Multi-Shot Video with Kling Omni](https://useapi.net/docs/articles/kling-omni-bash) |
 | [`lip-sync/`](./lip-sync) | Batch-generate **talking lip-sync avatars** from an image + TTS text or an audio file | [Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash) |
@@ -60,6 +61,19 @@ Cursor, VS Code, Windsurf and the full tool list: [Kling MCP server docs](https:
 - [How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash) — text-to-video and start/end-frame image-to-video, the model lineup, and pricing
 - [Multi-Reference & Multi-Shot Video with Kling Omni](https://useapi.net/docs/articles/kling-omni-bash) — blend up to 7 image references, reuse saved Video Elements, and storyboard a multi-shot sequence
 - [Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash) — talking avatars with TTS, motion transfer, and Kolors images
+
+## 中文说明
+
+这是 [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) 托管的可灵 API（Kling API）示例代码（Node.js）。通过 REST API 调用 **可灵 4.0（Kling 4.0）**、**v3** 和 **v2.x** 视频：文生视频、带首尾帧的图生视频、**Omni** 多图参考与多镜头、动作控制、对口型数字人（TTS 配音），以及 **Kolors** 图片生成。
+
+- 使用你自己的可灵（Kling AI）网站账号和套餐积分，无需可灵开发者账号或开发者 API Key。
+- 可灵 4.0：3–30 秒视频，720p 或 1080p（1080p 需可灵付费套餐），自带立体声音频。可灵官方 [开发者 API](https://kling.ai/dev) 目前仍将可灵 4.0 列为“即将推出”（截至 2026 年 10 月 18 日）。
+- 价格：useapi.net 每月 15 美元（含 3 个可灵账号及所有其他 API），加上你的可灵套餐。以 Pro 套餐（每月 33 美元，3,000 积分）计，可灵 4.0 1080p 约每秒 0.16 美元；可灵官方开发者 API 的视频资源包起价 700 美元。
+- 另有托管的 MCP 服务器（45 个工具），可在 Claude Code、Cursor、VS Code 中直接使用。
+
+主要示例：[`kling-4/`](./kling-4)（可灵 4.0）、[`text-to-video/`](./text-to-video)、[`omni/`](./omni)、[`lip-sync/`](./lip-sync)、[`motion-control/`](./motion-control)、[`image-generation/`](./image-generation)。快速开始见上方 [Quick start](#quick-start)；教程：[How to Generate Kling 4.0 Video via the Kling API](https://useapi.net/docs/articles/kling-4-api?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)；完整文档：[Kling API](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)，账号绑定：[Kling setup](https://useapi.net/docs/start-here/setup-kling?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)。
+
+useapi.net 是第三方 API，与快手及可灵 AI 无关联。
 
 ## About useapi.net
 
