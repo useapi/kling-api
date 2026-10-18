@@ -4,6 +4,8 @@ Batch-generate [Kling Omni](https://app.klingai.com) video through the [Kling AP
 
 📖 Full walkthrough: **[Multi-Reference & Multi-Shot Video with Kling Omni](https://useapi.net/docs/articles/kling-omni-bash)**
 
+Videos made with this API, on YouTube: [Mission: Kitchen Impossible • Kling v3 multi-shot](https://www.youtube.com/watch?v=Ti8oHAvg7Cw) · [Kling Video O1](https://www.youtube.com/watch?v=rUcVpqwcNVY)
+
 `kling-omni.mjs` reads prompts from `prompts.json`, submits each one to [`POST /videos/omni`](https://useapi.net/docs/api-kling-v1/post-kling-videos-omni) — single-shot (`prompt` + image/element refs) or multi-shot (a `shots` array) — polls [`GET /tasks/{task_id}`](https://useapi.net/docs/api-kling-v1/get-kling-tasks-task_id) until each task is final, and downloads every finished MP4, preferring the clean, non-watermarked master via [`GET /assets/download`](https://useapi.net/docs/api-kling-v1/get-kling-assets-download).
 
 ## Prerequisites

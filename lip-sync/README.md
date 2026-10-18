@@ -4,6 +4,8 @@ Batch-generate talking [lip-sync avatar](https://app.klingai.com) videos through
 
 📖 Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#lip-sync--avatars)**
 
+Video on YouTube: [Kling Avatar 2.0](https://youtube.com/shorts/nKw61pdzFmw)
+
 `kling-lip-sync.mjs` reads prompts from `prompts.json`, submits each one to [`POST /avatars/video`](https://useapi.net/docs/api-kling-v1/post-kling-avatars-video), polls [`GET /tasks/{task_id}`](https://useapi.net/docs/api-kling-v1/get-kling-tasks-task_id) until each task is final, and downloads every finished MP4 — preferring the clean, non-watermarked master via [`GET /assets/download`](https://useapi.net/docs/api-kling-v1/get-kling-assets-download).
 
 ## Prerequisites

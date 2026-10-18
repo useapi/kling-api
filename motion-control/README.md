@@ -4,6 +4,8 @@ Batch-transfer motion from a reference video onto a static image through the [Kl
 
 📖 Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#motion-control)**
 
+Videos made with this API, on YouTube: [Smooth Criminal • Kling Motion 3.0](https://youtube.com/shorts/VztjBYqqQ1A) · [Kling Motion Control / Mureka Music](https://youtube.com/shorts/TUAUO5cAlac)
+
 `kling-motion.mjs` reads prompts from `prompts.json`, submits each one to [`POST /videos/motion-create`](https://useapi.net/docs/api-kling-v1/post-kling-videos-motion-create), polls [`GET /tasks/{task_id}`](https://useapi.net/docs/api-kling-v1/get-kling-tasks-task_id) until each task is final, and downloads every finished MP4 — preferring the clean, non-watermarked master via [`GET /assets/download`](https://useapi.net/docs/api-kling-v1/get-kling-assets-download).
 
 ## Prerequisites
