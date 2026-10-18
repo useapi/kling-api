@@ -1,6 +1,6 @@
-# Kling v3 / v2.x video — Kling API batch generation (Node.js)
+# Kling 4.0 / v3 / v2.x video — Kling API batch generation (Node.js)
 
-Batch-generate [Kling v3](https://app.klingai.com) (and v3 Turbo, 2.6, 2.5, 2.1, 1.6) text-to-video through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
+Batch-generate [Kling 4.0](https://app.klingai.com) (and v3, v3 Turbo, 2.6, 2.5, 2.1, 1.6) text-to-video through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
 📖 Full walkthrough: **[How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash)**
 
@@ -24,7 +24,7 @@ node ./kling.mjs <API_TOKEN> <EMAIL> [PROMPTS_FILE]
 
 ## Prompts
 
-`prompts.json` is an array of prompt objects — `prompt` is the only required field; the default model is `kling-v1-6`, with a `16:9` aspect ratio, `std` (720p) mode, and a 5-second duration. Pick another model with `model_name` (`kling-v3-0`, `kling-v3-0-turbo`, `kling-v2-6`, `kling-v2-5`, `kling-v2-1-master`, `kling-v1-6`, `kling-v1-5`). `negative_prompt` and `cfg_scale` apply only to the 1.x models. Every supported parameter is documented on [POST /videos/text2video](https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video).
+`prompts.json` is an array of prompt objects — `prompt` is the only required field; the default model is `kling-v1-6`, with a `16:9` aspect ratio, `std` (720p) mode, and a 5-second duration. Pick another model with `model_name` (`kling-v4-0`, `kling-v3-0`, `kling-v3-0-turbo`, `kling-v2-6`, `kling-v2-5`, `kling-v2-1-master`, `kling-v1-6`, `kling-v1-5`). `kling-v4-0` (Kling 4.0) takes 3 to 30 seconds, `std` (720p) or `pro` (1080p, paid Kling plan), adds the `21:9` aspect ratio, always generates stereo audio and accepts prompts up to 8000 characters. `negative_prompt` and `cfg_scale` apply only to the 1.x models. Every supported parameter is documented on [POST /videos/text2video](https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video).
 
 ## Image-to-video
 

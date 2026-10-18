@@ -1,6 +1,6 @@
 /*
 
-Script version 1.0, June 22, 2026
+Script version 1.1, October 18, 2026
 
 Script to batch-generate videos using prompts with the Kling API v1 by useapi.net 🚀
 Defaults to the kling-v1-6 model and uses the asynchronous text2video endpoint.
@@ -37,6 +37,7 @@ Changelog:
 ==========
 
 - June 22, 2026: Initial release.
+- October 18, 2026: Kling 4.0 (kling-v4-0) prompts, 3-30s, up to 8000-character prompts.
 
 */
 
@@ -262,7 +263,7 @@ async function main() {
         process.exit(1);
     }
 
-    console.info('Script v1.0');
+    console.info('Script v1.1');
 
     console.info('Node version is: ' + process.version);
 
@@ -334,7 +335,9 @@ async function execute(apiToken, email, promptFile) {
 
     for (let i = 1; i <= prompts.length; i++) {
         const prompt = prompts[i - 1];
-        const { prompt: text } = prompt;
+        const { prompt: text, model_name } = prompt;
+        // Kling 4.0 takes prompts up to 8000 characters, every other model up to 2500.
+        const maxPrompt = model_name === 'kling-v4-0' ? 8000 : 2500;
 
         const notSupported = invalidKeys(prompt);
         if (notSupported.length)
@@ -343,8 +346,8 @@ async function execute(apiToken, email, promptFile) {
         if (!text)
             warnings.push(`⚠️  Please specify a prompt. Prompt ${i}`);
 
-        if (text && text.length > 2500)
-            warnings.push(`⚠️  prompt exceeds 2500 characters. Prompt ${i}`);
+        if (text && text.length > maxPrompt)
+            warnings.push(`⚠️  prompt exceeds ${maxPrompt} characters. Prompt ${i}`);
     }
 
     if (warnings.length > 0) {

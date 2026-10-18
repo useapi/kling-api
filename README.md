@@ -1,12 +1,12 @@
 # Kling API examples (useapi.net)
 
-Runnable Node.js examples for the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — generate **Kling v3 / v2.x** video (**text-to-video**, **image-to-video**, multi-image **Omni** & multi-shot, **motion control**, **effects**, **extend**, native audio), **lip-sync avatars** with **TTS / custom voices**, and **Kolors image generation** (incl. **virtual try-on** & **upscale**) — all through a simple REST API that drives your own [Kling AI](https://app.klingai.com) account, with no developer account or per-generation metering.
+Runnable Node.js examples for the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — generate **Kling 4.0**, **v3** and **v2.x** video (**text-to-video**, **image-to-video**, multi-image **Omni** & multi-shot, **motion control**, **effects**, **extend**, native audio), **lip-sync avatars** with **TTS / custom voices**, and **Kolors image generation** (incl. **virtual try-on** & **upscale**) — all through a simple REST API that drives your own [Kling AI](https://app.klingai.com) account, with no developer account or per-generation metering.
 
 Each example reads a list of prompts from `prompts.json`, submits them through the useapi.net Kling API, polls each task until it is final, and downloads every result — preferring the clean, non-watermarked master — so you can queue a batch and come back to the winners.
 
 | Example | What it does | Tutorial |
 |---|---|---|
-| [`text-to-video/`](./text-to-video) | Batch-generate **Kling v3 / v2.x** video from text prompts (with notes on adapting it to the image-to-video frames endpoint) | [How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash) |
+| [`text-to-video/`](./text-to-video) | Batch-generate **Kling 4.0 / v3 / v2.x** video from text prompts (with notes on adapting it to the image-to-video frames endpoint) | [How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash) |
 | [`omni/`](./omni) | Batch-generate **Kling Omni** video — multi-image reference, saved **Video Elements**, and v3 **multi-shot** sequences | [Multi-Reference & Multi-Shot Video with Kling Omni](https://useapi.net/docs/articles/kling-omni-bash) |
 | [`lip-sync/`](./lip-sync) | Batch-generate **talking lip-sync avatars** from an image + TTS text or an audio file | [Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash) |
 | [`motion-control/`](./motion-control) | Batch-transfer **motion** from a reference video onto a still image | [Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash) |

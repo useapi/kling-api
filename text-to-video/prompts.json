@@ -3,6 +3,13 @@
         "prompt": "By default the kling-v1-6 model with a 16:9 aspect ratio, std (720p) mode and a 5-second duration will be used."
     },
     {
+        "model_name": "kling-v4-0",
+        "aspect_ratio": "16:9",
+        "mode": "std",
+        "duration": "3",
+        "prompt": "A small paper boat sails across a rain puddle on a city sidewalk at dusk, neon signs reflect and ripple in the water, raindrops patter around it and a tram bell rings in the distance, low camera at water level. Kling 4.0 always generates stereo audio and takes 3 to 30 seconds, std (720p) or pro (1080p, paid Kling plan)."
+    },
+    {
         "model_name": "kling-v3-0",
         "aspect_ratio": "16:9",
         "mode": "pro",
