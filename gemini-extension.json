@@ -1,0 +1,22 @@
+{
+  "name": "useapi-kling",
+  "version": "1.0.0",
+  "description": "Hosted Kling MCP server by useapi.net (45 tools): make Kling 4.0, v3 and Omni video and images, avatars and lip-sync, on your own Kling account. Third-party paid service, not affiliated with Kuaishou or Kling AI.",
+  "contextFileName": "GEMINI.md",
+  "settings": [
+    {
+      "name": "useapi.net API token",
+      "description": "Your useapi.net API token, from https://useapi.net/docs/start-here/setup-useapi",
+      "envVar": "USEAPI_TOKEN",
+      "sensitive": true
+    }
+  ],
+  "mcpServers": {
+    "useapi-kling": {
+      "httpUrl": "https://api.useapi.net/v1/kling/mcp",
+      "headers": {
+        "Authorization": "Bearer ${USEAPI_TOKEN}"
+      }
+    }
+  }
+}

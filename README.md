@@ -42,6 +42,33 @@ claude mcp add --transport http useapi-kling https://api.useapi.net/v1/kling/mcp
 
 Cursor, VS Code, Windsurf and the full tool list: [Kling MCP server docs](https://useapi.net/docs/api-kling-v1/mcp?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api). useapi.net is a third-party API, not affiliated with Kuaishou or Kling AI.
 
+## Use with Claude Code
+
+This repo is also a Claude Code plugin marketplace. The plugin adds the hosted Kling MCP server, and reads your token from the `USEAPI_TOKEN` environment variable, so set it before you start Claude Code:
+
+```bash
+export USEAPI_TOKEN=user:12345-...      # your useapi.net API token
+```
+
+Then, inside Claude Code:
+
+```
+/plugin marketplace add useapi/kling-api
+/plugin install kling@useapi-kling
+```
+
+On Claude Code 2.1.275 or later, `/plugin install kling --marketplace useapi/kling-api` does both in one step. Run `/mcp` to check that `useapi-kling` is connected.
+
+## Use with Gemini CLI
+
+This repo is also a Gemini CLI extension with the same MCP server:
+
+```bash
+gemini extensions install https://github.com/useapi/kling-api
+```
+
+The install asks for your useapi.net API token and keeps it in the system keychain. Change it later with `gemini extensions config useapi-kling`, and check the connection with `gemini mcp list`.
+
 ## Common questions
 
 <!-- Official API figures in these answers, verified 2026-10-18: https://kling.ai/dev and https://kling.ai/dev/pricing (Kling 4.0 coming soon, video packs from $700), per useapi.net/docs/api-kling-v1 on 2026-10-18. -->

@@ -1,0 +1,24 @@
+{
+  "name": "useapi-kling",
+  "description": "useapi.net Kling plugin for Claude Code: the hosted MCP server.",
+  "owner": {
+    "name": "useapi.net",
+    "url": "https://useapi.net"
+  },
+  "plugins": [
+    {
+      "name": "kling",
+      "source": "./",
+      "description": "Hosted Kling MCP server by useapi.net (45 tools): make Kling 4.0, v3 and Omni video and images, avatars and lip-sync, on your own Kling account. Third-party paid service, not affiliated with Kuaishou or Kling AI.",
+      "category": "media",
+      "tags": [
+        "kling",
+        "video",
+        "image",
+        "lip-sync",
+        "avatar",
+        "mcp"
+      ]
+    }
+  ]
+}
