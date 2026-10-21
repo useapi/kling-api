@@ -1,0 +1,4 @@
+prompt,image_url,end_image_url,model,mode,duration,aspect_ratio,email,status,account,task_id,started,finished,video_url,drive_link,credits_left,note
+"A paper boat drifts down a rainy city street at dusk, neon reflections in the puddles",,,kling-v4-0,std,5,16:9,,new,,,,,,,,
+"Slow push-in on a lighthouse in a storm, waves crashing on the rocks",,,kling-v4-0,pro,10,9:16,,new,,,,,,,,
+The boat sails out of frame toward the sunset,https://example.com/your-start-frame.jpg,,kling-v3-0,std,5,,,new,,,,,,,,

@@ -1,0 +1,1402 @@
+{
+  "id": "klingSheetBatch01",
+  "name": "Kling 4.0 video queue in Google Sheets across your Kling accounts (third-party API)",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Add prompts to the Kling queue",
+        "formDescription": "One prompt per line. To animate an image, add | and the image link after the prompt (and | and an end image link). The next tick, within 5 minutes, starts them on your Kling accounts.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Prompts",
+              "fieldType": "textarea",
+              "requiredField": true,
+              "placeholder": "A paper boat drifts down a rainy street at dusk\nThe boat sails into the sunset | https://example.com/boat.jpg"
+            },
+            {
+              "fieldLabel": "Model",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "defaultValue": "kling-v4-0",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "kling-v4-0"
+                  },
+                  {
+                    "option": "kling-v3-0"
+                  },
+                  {
+                    "option": "kling-v3-0-turbo"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Quality",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "defaultValue": "std (720p)",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "std (720p)"
+                  },
+                  {
+                    "option": "pro (1080p, paid Kling plan)"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Duration (seconds)",
+              "fieldType": "number",
+              "requiredField": true,
+              "defaultValue": 5,
+              "placeholder": "Kling 4.0: 3 to 30. v3: 3 to 15"
+            },
+            {
+              "fieldLabel": "Aspect ratio (text-to-video)",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "defaultValue": "16:9",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "16:9"
+                  },
+                  {
+                    "option": "9:16"
+                  },
+                  {
+                    "option": "1:1"
+                  },
+                  {
+                    "option": "21:9"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Kling account (optional)",
+              "fieldType": "email",
+              "placeholder": "Leave empty: each video goes to any account with a free job slot"
+            }
+          ]
+        },
+        "authentication": "basicAuth",
+        "options": {
+          "path": "kling-queue",
+          "appendAttribution": false,
+          "buttonLabel": "Add to the queue"
+        }
+      },
+      "name": "Add to the Kling queue",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "formBasicAuth",
+          "name": "Form login"
+        }
+      },
+      "webhookId": "c26016d0-858a-5c19-8656-5dd5933d005e"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "name": "Every 5 minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// ---- Settings you can edit --------------------------------------------------------------------------------\nconst settings = {\n  sheetId: '',               // the Google Sheet id: the long part of its URL between /d/ and /edit\n  sheetName: 'Kling queue',  // the tab with the columns from kling-queue-sheet.csv\n  model: 'kling-v4-0',       // used when a row leaves model empty: kling-v4-0, kling-v3-0, kling-v3-0-turbo, kling-v2-6 ...\n  mode: 'std',               // std (720p) or pro (1080p, paid Kling plan). v3 also takes 4k\n  duration: 5,               // seconds. Kling 4.0: 3-30, v3: 3-15, older models: 5 or 10\n  aspectRatio: '16:9',       // text-to-video only (image-to-video keeps the image's shape): 16:9, 9:16, 1:1, 21:9 (4.0)\n  maxStartsPerTick: 10,      // at most this many new jobs per tick, and never more than your accounts' free job slots\n  maxPollsPerTick: 25,       // at most this many running rows read per tick\n  cleanMaster: true,         // true = link the clean, non-watermarked master (paid Kling plans), else the preview\n  saveToDrive: false,        // true = also copy each finished video to Google Drive (folder below)\n  driveFolderId: '',         // empty = the root of My Drive\n};\n// -----------------------------------------------------------------------------------------------------------\nlet fromForm = false;\ntry { fromForm = $('Add to the Kling queue').isExecuted; } catch (e) { fromForm = false; }\nif (!settings.sheetId) throw new Error('Set sheetId in the Settings node: the id of your Google Sheet.');\nreturn [{ json: { ...settings, fromForm } }];\n"
+      },
+      "name": "Settings",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f43f561b-751b-59d5-ba11-22a09e25f6e0",
+              "leftValue": "={{ $json.fromForm }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "From the form?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        460,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// One row per line: \"prompt | start image link | end image link\". The engine checks each row when it starts it.\nconst f = $('Add to the Kling queue').first().json;\nconst mode = /^pro/.test(String(f['Quality'] || '')) ? 'pro' : 'std';\nconst pin = String(f['Kling account (optional)'] || '').trim();\nconst rows = String(f['Prompts'] || '').split(/\\r?\\n/).map(l => l.trim()).filter(Boolean).slice(0, 200).map(line => {\n  const [prompt, image, tail] = line.split('|').map(s => s.trim());\n  return { json: { prompt: prompt || '', image_url: image || '', end_image_url: tail || '', model: f['Model'] || '', mode,\n    duration: String(f['Duration (seconds)'] || ''), aspect_ratio: image ? '' : (f['Aspect ratio (text-to-video)'] || ''),\n    email: pin, status: 'new', note: `added from the form ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC` } };\n});\nif (!rows.length) throw new Error('No prompts in the form.');\nreturn rows;\n"
+      },
+      "name": "Form rows",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Settings').first().json.sheetId }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ $('Settings').first().json.sheetName }}"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "image_url",
+              "displayName": "image_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "end_image_url",
+              "displayName": "end_image_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "model",
+              "displayName": "model",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mode",
+              "displayName": "mode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "duration",
+              "displayName": "duration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "aspect_ratio",
+              "displayName": "aspect_ratio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "account",
+              "displayName": "account",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "task_id",
+              "displayName": "task_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "started",
+              "displayName": "started",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "finished",
+              "displayName": "finished",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_url",
+              "displayName": "video_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "drive_link",
+              "displayName": "drive_link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "credits_left",
+              "displayName": "credits_left",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "note",
+              "displayName": "note",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Append rows",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        920,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "googleSheetsCred",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "text",
+        "completionTitle": "Added to the queue",
+        "completionMessage": "Your prompts are in the sheet with status new. The next tick (every 5 minutes) starts them on your Kling accounts: watch the status, account and video_url columns.",
+        "options": {}
+      },
+      "name": "Queued",
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        1140,
+        0
+      ],
+      "webhookId": "9e88e627-0749-5264-88cc-30a24c5ffb09",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.useapi.net/v1/kling/accounts",
+        "options": {
+          "timeout": 60000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "name": "Accounts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        420
+      ],
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "useapiHeaderAuth",
+          "name": "useapi.net API token"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.useapi.net/v1/kling/scheduler/available",
+        "options": {
+          "timeout": 60000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "name": "Free slots",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        420
+      ],
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "useapiHeaderAuth",
+          "name": "useapi.net API token"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.useapi.net/v1/kling/scheduler",
+        "options": {
+          "timeout": 60000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "name": "Running tasks",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1140,
+        420
+      ],
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "useapiHeaderAuth",
+          "name": "useapi.net API token"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Settings').first().json.sheetId }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ $('Settings').first().json.sheetName }}"
+        },
+        "options": {}
+      },
+      "name": "Read rows",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1360,
+        420
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "googleSheetsCred",
+          "name": "Google Sheets account"
+        }
+      },
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst apiErr = j => {\n  if (!j || !j.error || j.task || j.status_name !== undefined || j.cdnUrl || j.session) return null;  // a Kling answer may carry its own error text\n  const e = j.error;\n  const msg = typeof e === 'string' ? e : String(e.message || '');\n  let body = typeof e === 'string' ? j : null;\n  const m = msg.match(/^(\\d{3}) - ([\\s\\S]*)$/);\n  if (m) { try { body = JSON.parse(m[2]); if (typeof body === 'string') body = JSON.parse(body); } catch (x) { body = null; } }\n  // n8n keeps the answer's body in the message for most codes ('400 - \"{...}\"'), but swaps in its own text for some\n  // (429: \"Try spacing your requests out...\"): then only error.status carries the HTTP code.\n  const code = Number((body && body.code) || (m && m[1]) || (typeof e === 'object' && (e.status || e.httpCode)) || 0) || 0;\n  const plain = { 429: 'every Kling account is running at its job limit', 502: 'bad gateway', 504: 'timed out', 500: 'server error' };\n  const text = (body && typeof body.error === 'string' && body.error) || (!m && plain[code]) || (typeof e === 'object' && e.description) || msg || 'no answer';\n  return { code, text: String(text).slice(0, 500) };\n};\n// Kling answers 500 when it refuses the content (moderation codes like CM_EXT.POther): nothing was made.\nconst refused = err => err.code === 500 && /CM_|violat|guideline|sensitive|moderat|inappropriate|risk/i.test(err.text);\n// 429 = every account (or the pinned one) is at its job limit: nothing was made, the next tick sends it again.\nconst nothingMade = err => err.code === 429;\n// 596 = the account's Kling login failed: nothing was made, so Start result makes it an error with the API's message.\n// Any other 5xx, or no answer at all: the job may have started and used credits, so it is never sent again.\nconst mayBeMade = err => !err.code || (err.code >= 500 && err.code !== 596 && !refused(err));\nconst SETUP = 'https://useapi.net/docs/start-here/setup-kling?utm_source=n8n&utm_medium=referral&utm_campaign=kling-sheet-batch';\nconst explain = (err, what) => {\n  if (err.code === 401) return `${what}: the useapi.net API token was refused. Open the \"useapi.net API token\" credential and check it: Name Authorization, Value Bearer followed by your token.`;\n  if (err.code === 402) return `${what}: ${err.text}. Check your useapi.net subscription.`;\n  if (err.code === 403) return `${what}: this Kling account can't use that model or setting yet (${err.text}). Nothing was charged. Pick another model, or pin an account that has it in the email column, then set status to new.`;\n  if (err.code === 404) return `${what}: ${err.text}. The email column must be a Kling account connected at useapi.net (${SETUP}).`;\n  if (err.code === 400) return `${what}: ${err.text}. Fix the row, then set status to new.`;\n  if (!err.code) return `${what}: no answer from useapi.net (${err.text}).`;\n  return `${what}: ${err.text} (HTTP ${err.code})`;\n};\nconst clean = (v, n) => String(v == null ? '' : v).replace(/\\s+/g, ' ').trim().slice(0, n || 200);\nconst stamp = () => new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';\n\n// What each row needs this tick, from its status column:\n//   new / (empty) -> start a job (no email: the API picks a healthy account with a free job slot, an email pins it)\n//   rendering     -> read the task on its account\n//   done, error, check job, anything else -> waits for you (set it back to new to run it again)\nconst S = $('Settings').first().json;\nconst accts = $('Accounts').first().json;\nconst free = $('Free slots').first().json;\nconst running = $('Running tasks').all().map(i => i.json).filter(t => t && t.id != null);\nconst ae = apiErr(accts);\nif (ae) throw new Error(explain(ae, 'The Kling accounts could not be read'));\nconst emails = Object.keys(accts || {}).filter(k => accts[k] && typeof accts[k] === 'object' && accts[k].email);\nif (!emails.length) throw new Error(`No Kling account is connected at useapi.net yet: see ${SETUP}`);\n// Free job slots per account (each account runs at most its maxJobs at once). If the read failed, 429s decide.\nconst slots = {};\nlet freeTotal = Infinity;\nif (!apiErr(free) && Array.isArray(free.available)) {\n  freeTotal = 0;\n  for (const a of free.available) { slots[a.email] = Math.max(0, Number(a.available) || 0); freeTotal += slots[a.email]; }\n}\nconst runningOn = {};\nfor (const t of running) runningOn[String(t.id)] = t.email;\n\nconst MODELS = {  // durations and modes from the useapi.net docs, October 2026\n  'kling-v4-0': { min: 3, max: 30, modes: ['std', 'pro'], ratios: ['16:9', '9:16', '1:1', '21:9'], len: 8000, tail: true },\n  'kling-v3-0': { min: 3, max: 15, modes: ['std', 'pro', '4k'], ratios: ['16:9', '9:16', '1:1'], len: 2500, tail: true },\n  'kling-v3-0-turbo': { min: 3, max: 15, modes: ['std', 'pro'], ratios: ['16:9', '9:16', '1:1'], len: 2500, tail: false },\n  'kling-v2-6': { set: [5, 10], modes: ['std', 'pro'], ratios: ['16:9', '9:16', '1:1'], len: 2500, tail: true },\n  'kling-v2-5': { set: [5, 10], modes: ['pro'], ratios: ['16:9', '9:16', '1:1'], len: 2500, tail: true },\n  'kling-v2-1-master': { set: [5, 10], modes: ['pro'], ratios: ['16:9', '9:16', '1:1'], len: 2500, tail: false },\n};\nconst raw = v => String(v == null ? '' : v).trim();\nconst rows = $('Read rows').all().map(i => i.json).filter(r => r && r.row_number);\nconst out = [];\nlet starts = 0, polls = 0;\nfor (const r of rows) {\n  const st = raw(r.status).toLowerCase();\n  const fix = (note, status) => out.push({ json: { route: 'row', update: { row_number: r.row_number, status: status || 'error', note } } });\n  if (st === 'rendering') {\n    const id = raw(r.task_id);\n    if (!id) { fix('status is rendering but task_id is empty. Set status to new to start it again.', 'check job'); continue; }\n    let email = raw(r.account) || raw(r.email) || runningOn[id] || (emails.length === 1 ? emails[0] : '');\n    if (!email) { fix(`Task ${id} ran on an account this tick could not find. Look it up with GET /tasks?email=<account> on each account, write that email in account, and set status back to rendering.`, 'check job'); continue; }\n    if (polls >= S.maxPollsPerTick) continue;\n    polls += 1;\n    out.push({ json: { route: 'poll', row_number: r.row_number, task_id: id, account: email, wasUnknown: !raw(r.account),\n      url: 'https://api.useapi.net/v1/kling/tasks/' + encodeURIComponent(id) + '?email=' + encodeURIComponent(email) } });\n    continue;\n  }\n  if (st !== '' && st !== 'new') continue;\n  const prompt = raw(r.prompt), image = raw(r.image_url), tail = raw(r.end_image_url);\n  if (!prompt && !image) continue;  // an empty row\n  const model = raw(r.model) || S.model, m = MODELS[model];\n  const mode = (raw(r.mode) || S.mode).toLowerCase();\n  const duration = Number(raw(r.duration) || S.duration);\n  const ratio = raw(r.aspect_ratio) || S.aspectRatio;\n  const pin = raw(r.email);\n  const bad = [];\n  if (!m) bad.push(`model ${model} is not one this template knows: use ${Object.keys(MODELS).join(', ')}.`);\n  else {\n    if (m.set ? !m.set.includes(duration) : !(duration >= m.min && duration <= m.max && Number.isInteger(duration)))\n      bad.push(`duration ${raw(r.duration) || S.duration} does not fit ${model}: ${m.set ? m.set.join(' or ') : `${m.min} to ${m.max}`} seconds.`);\n    if (!m.modes.includes(mode)) bad.push(`mode ${mode} does not fit ${model}: ${m.modes.join(', ')}.`);\n    if (!image && !m.ratios.includes(ratio)) bad.push(`aspect_ratio ${ratio} does not fit ${model}: ${m.ratios.join(', ')}.`);\n    if (tail && !m.tail) bad.push(`${model} takes no end image.`);\n    if (prompt.length > m.len) bad.push(`the prompt is ${prompt.length} characters, ${model} takes ${m.len}.`);\n  }\n  if (!image && !prompt) bad.push('write a prompt.');\n  if (tail && !image) bad.push('an end image needs a start image in image_url.');\n  for (const u of [image, tail]) if (u && !/^https:\\/\\/\\S+$/.test(u)) bad.push(`${u.slice(0, 60)} is not an https link.`);\n  if (pin && !accts[pin]) bad.push(`email ${pin} is not a Kling account connected at useapi.net.`);\n  if (bad.length) { fix('Not started: ' + bad.join(' ')); continue; }\n  if (starts >= S.maxStartsPerTick || starts >= freeTotal) continue;  // the next tick takes it\n  if (pin && slots[pin] !== undefined) { if (slots[pin] <= 0) continue; slots[pin] -= 1; }\n  starts += 1;\n  const body = { model_name: model, mode, duration: String(duration), replyRef: `row-${r.row_number}` };\n  if (prompt) body.prompt = prompt;\n  if (image) { body.image = image; if (tail) body.image_tail = tail; } else body.aspect_ratio = ratio;\n  if (pin) body.email = pin;  // no email: the API spreads the jobs across your accounts\n  out.push({ json: { route: 'start', row_number: r.row_number, pin, body,\n    url: 'https://api.useapi.net/v1/kling' + (image ? '/videos/image2video-frames' : '/videos/text2video') } });\n}\nreturn out;\n"
+      },
+      "name": "Plan the tick",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1580,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 3,
+        "output": "={{ {\"start\": 0, \"poll\": 1, \"row\": 2}[$json.route] ?? 2 }}"
+      },
+      "name": "Row step",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1800,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.url }}",
+        "options": {
+          "timeout": 120000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}"
+      },
+      "name": "Start job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2080,
+        240
+      ],
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "useapiHeaderAuth",
+          "name": "useapi.net API token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst apiErr = j => {\n  if (!j || !j.error || j.task || j.status_name !== undefined || j.cdnUrl || j.session) return null;  // a Kling answer may carry its own error text\n  const e = j.error;\n  const msg = typeof e === 'string' ? e : String(e.message || '');\n  let body = typeof e === 'string' ? j : null;\n  const m = msg.match(/^(\\d{3}) - ([\\s\\S]*)$/);\n  if (m) { try { body = JSON.parse(m[2]); if (typeof body === 'string') body = JSON.parse(body); } catch (x) { body = null; } }\n  // n8n keeps the answer's body in the message for most codes ('400 - \"{...}\"'), but swaps in its own text for some\n  // (429: \"Try spacing your requests out...\"): then only error.status carries the HTTP code.\n  const code = Number((body && body.code) || (m && m[1]) || (typeof e === 'object' && (e.status || e.httpCode)) || 0) || 0;\n  const plain = { 429: 'every Kling account is running at its job limit', 502: 'bad gateway', 504: 'timed out', 500: 'server error' };\n  const text = (body && typeof body.error === 'string' && body.error) || (!m && plain[code]) || (typeof e === 'object' && e.description) || msg || 'no answer';\n  return { code, text: String(text).slice(0, 500) };\n};\n// Kling answers 500 when it refuses the content (moderation codes like CM_EXT.POther): nothing was made.\nconst refused = err => err.code === 500 && /CM_|violat|guideline|sensitive|moderat|inappropriate|risk/i.test(err.text);\n// 429 = every account (or the pinned one) is at its job limit: nothing was made, the next tick sends it again.\nconst nothingMade = err => err.code === 429;\n// 596 = the account's Kling login failed: nothing was made, so Start result makes it an error with the API's message.\n// Any other 5xx, or no answer at all: the job may have started and used credits, so it is never sent again.\nconst mayBeMade = err => !err.code || (err.code >= 500 && err.code !== 596 && !refused(err));\nconst SETUP = 'https://useapi.net/docs/start-here/setup-kling?utm_source=n8n&utm_medium=referral&utm_campaign=kling-sheet-batch';\nconst explain = (err, what) => {\n  if (err.code === 401) return `${what}: the useapi.net API token was refused. Open the \"useapi.net API token\" credential and check it: Name Authorization, Value Bearer followed by your token.`;\n  if (err.code === 402) return `${what}: ${err.text}. Check your useapi.net subscription.`;\n  if (err.code === 403) return `${what}: this Kling account can't use that model or setting yet (${err.text}). Nothing was charged. Pick another model, or pin an account that has it in the email column, then set status to new.`;\n  if (err.code === 404) return `${what}: ${err.text}. The email column must be a Kling account connected at useapi.net (${SETUP}).`;\n  if (err.code === 400) return `${what}: ${err.text}. Fix the row, then set status to new.`;\n  if (!err.code) return `${what}: no answer from useapi.net (${err.text}).`;\n  return `${what}: ${err.text} (HTTP ${err.code})`;\n};\nconst clean = (v, n) => String(v == null ? '' : v).replace(/\\s+/g, ' ').trim().slice(0, n || 200);\nconst stamp = () => new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';\n\n// The task id and its account go into the row in this same tick, so the next tick (or a restart) reads the task\n// instead of paying twice. Without email the API picked the account: the task's userId names it.\nconst accts = $('Accounts').first().json;\nconst byUser = {};\nfor (const k of Object.keys(accts || {})) { const u = ((accts[k] || {}).session || {}).userId; if (u != null) byUser[String(u)] = k; }\nreturn $input.all().map((it, i) => {\n  const plan = $('Plan the tick').itemMatching(i).json;\n  const j = it.json, u = { row_number: plan.row_number };\n  const id = j && j.task && j.task.id;\n  if (id) {\n    u.status = 'rendering'; u.task_id = String(id); u.started = stamp(); u.finished = '';\n    u.account = plan.pin || byUser[String(j.task.userId)] || '';\n    u.note = u.account ? '' : 'Started. Its account is looked up in GET /scheduler next tick.';\n    u.video_url = ''; u.drive_link = ''; u.credits_left = '';\n    return { json: { update: u } };\n  }\n  const e = apiErr(j) || { code: 0, text: 'no task id in the answer' };\n  if (nothingMade(e)) u.note = `${stamp()}: ${plan.pin ? plan.pin + ' is' : 'every account is'} at its job limit. Nothing was made: sent again next tick.`;\n  else if (refused(e)) { u.status = 'error'; u.note = `Kling refused it: ${e.text}. Nothing was made. Change the prompt or the image, then set status to new.`; }\n  else if (e.code === 596) { u.status = 'error'; u.note = `Not started: ${e.text.replace(/[.\\s]+$/, '')}. The Kling account's login failed and nothing was made. Update the account at useapi.net (${SETUP}), then set status to new.`; }\n  else if (mayBeMade(e)) { u.status = 'check job'; u.note = `${e.code || 'no answer'}: ${e.text}. The job may have started and used credits, so it was not sent again. Check GET /tasks?email=<account> on ${plan.pin || 'your accounts'} before you set status back to new.`; }\n  else { u.status = 'error'; u.note = explain(e, 'Not started'); }\n  return { json: { update: u } };\n});\n"
+      },
+      "name": "Start result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2300,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.url }}",
+        "options": {
+          "timeout": 60000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "name": "Read task",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2080,
+        780
+      ],
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "useapiHeaderAuth",
+          "name": "useapi.net API token"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst apiErr = j => {\n  if (!j || !j.error || j.task || j.status_name !== undefined || j.cdnUrl || j.session) return null;  // a Kling answer may carry its own error text\n  const e = j.error;\n  const msg = typeof e === 'string' ? e : String(e.message || '');\n  let body = typeof e === 'string' ? j : null;\n  const m = msg.match(/^(\\d{3}) - ([\\s\\S]*)$/);\n  if (m) { try { body = JSON.parse(m[2]); if (typeof body === 'string') body = JSON.parse(body); } catch (x) { body = null; } }\n  // n8n keeps the answer's body in the message for most codes ('400 - \"{...}\"'), but swaps in its own text for some\n  // (429: \"Try spacing your requests out...\"): then only error.status carries the HTTP code.\n  const code = Number((body && body.code) || (m && m[1]) || (typeof e === 'object' && (e.status || e.httpCode)) || 0) || 0;\n  const plain = { 429: 'every Kling account is running at its job limit', 502: 'bad gateway', 504: 'timed out', 500: 'server error' };\n  const text = (body && typeof body.error === 'string' && body.error) || (!m && plain[code]) || (typeof e === 'object' && e.description) || msg || 'no answer';\n  return { code, text: String(text).slice(0, 500) };\n};\n// Kling answers 500 when it refuses the content (moderation codes like CM_EXT.POther): nothing was made.\nconst refused = err => err.code === 500 && /CM_|violat|guideline|sensitive|moderat|inappropriate|risk/i.test(err.text);\n// 429 = every account (or the pinned one) is at its job limit: nothing was made, the next tick sends it again.\nconst nothingMade = err => err.code === 429;\n// 596 = the account's Kling login failed: nothing was made, so Start result makes it an error with the API's message.\n// Any other 5xx, or no answer at all: the job may have started and used credits, so it is never sent again.\nconst mayBeMade = err => !err.code || (err.code >= 500 && err.code !== 596 && !refused(err));\nconst SETUP = 'https://useapi.net/docs/start-here/setup-kling?utm_source=n8n&utm_medium=referral&utm_campaign=kling-sheet-batch';\nconst explain = (err, what) => {\n  if (err.code === 401) return `${what}: the useapi.net API token was refused. Open the \"useapi.net API token\" credential and check it: Name Authorization, Value Bearer followed by your token.`;\n  if (err.code === 402) return `${what}: ${err.text}. Check your useapi.net subscription.`;\n  if (err.code === 403) return `${what}: this Kling account can't use that model or setting yet (${err.text}). Nothing was charged. Pick another model, or pin an account that has it in the email column, then set status to new.`;\n  if (err.code === 404) return `${what}: ${err.text}. The email column must be a Kling account connected at useapi.net (${SETUP}).`;\n  if (err.code === 400) return `${what}: ${err.text}. Fix the row, then set status to new.`;\n  if (!err.code) return `${what}: no answer from useapi.net (${err.text}).`;\n  return `${what}: ${err.text} (HTTP ${err.code})`;\n};\nconst clean = (v, n) => String(v == null ? '' : v).replace(/\\s+/g, ' ').trim().slice(0, n || 200);\nconst stamp = () => new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';\n\n// Running rows write nothing (unless the account was just found). Finished rows go on to the download link.\nreturn $input.all().flatMap((it, i) => {\n  const plan = $('Plan the tick').itemMatching(i).json;\n  const j = it.json, u = { row_number: plan.row_number, account: plan.account };\n  const e = apiErr(j);\n  if (e) {\n    if (e.code === 404) { u.status = 'error'; u.note = `Task ${plan.task_id} is not on ${plan.account}: Kling deleted it, refused it at moderation, or the account ran out of credits. Check the balance, then set status to new.`; }\n    else u.note = `${stamp()}: the task could not be read (${e.code || 'no answer'}: ${e.text}). Tries again next tick.`;\n    return [{ json: { route: 'row', update: u } }];\n  }\n  if (!j.status_final) return plan.wasUnknown ? [{ json: { route: 'row', update: u } }] : [];\n  if (j.status_name !== 'succeed') {\n    u.status = 'error';\n    u.note = `Kling could not make it (${j.status_name || j.status}${j.error ? ': ' + clean(j.error, 300) : ''}${j.message ? ', ' + clean(j.message, 200) : ''}). Change the row, then set status to new.`;\n    return [{ json: { route: 'row', update: u } }];\n  }\n  const w = (j.works || [])[0] || {};\n  const preview = (w.resource || {}).resource || '';\n  if (!preview) { u.status = 'check job'; u.note = 'The task finished without a video link.'; return [{ json: { route: 'row', update: u } }]; }\n  return [{ json: { route: 'finished', update: u, workId: String(w.workId || ''), preview, account: plan.account, task_id: plan.task_id } }];\n});\n"
+      },
+      "name": "Task result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2300,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 2,
+        "output": "={{ {\"finished\": 0, \"row\": 1}[$json.route] ?? 1 }}"
+      },
+      "name": "Task next",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2520,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://api.useapi.net/v1/kling/assets/download?email=' + encodeURIComponent($json.account) + '&workIds=' + encodeURIComponent($json.workId) + '&fileTypes=MP4' }}",
+        "options": {
+          "timeout": 60000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "name": "Clean link",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        780
+      ],
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "useapiHeaderAuth",
+          "name": "useapi.net API token"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'https://api.useapi.net/v1/kling/accounts/' + $('Task result').item.json.account }}",
+        "options": {
+          "timeout": 60000
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "name": "Read balance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2960,
+        780
+      ],
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "useapiHeaderAuth",
+          "name": "useapi.net API token"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst apiErr = j => {\n  if (!j || !j.error || j.task || j.status_name !== undefined || j.cdnUrl || j.session) return null;  // a Kling answer may carry its own error text\n  const e = j.error;\n  const msg = typeof e === 'string' ? e : String(e.message || '');\n  let body = typeof e === 'string' ? j : null;\n  const m = msg.match(/^(\\d{3}) - ([\\s\\S]*)$/);\n  if (m) { try { body = JSON.parse(m[2]); if (typeof body === 'string') body = JSON.parse(body); } catch (x) { body = null; } }\n  // n8n keeps the answer's body in the message for most codes ('400 - \"{...}\"'), but swaps in its own text for some\n  // (429: \"Try spacing your requests out...\"): then only error.status carries the HTTP code.\n  const code = Number((body && body.code) || (m && m[1]) || (typeof e === 'object' && (e.status || e.httpCode)) || 0) || 0;\n  const plain = { 429: 'every Kling account is running at its job limit', 502: 'bad gateway', 504: 'timed out', 500: 'server error' };\n  const text = (body && typeof body.error === 'string' && body.error) || (!m && plain[code]) || (typeof e === 'object' && e.description) || msg || 'no answer';\n  return { code, text: String(text).slice(0, 500) };\n};\n// Kling answers 500 when it refuses the content (moderation codes like CM_EXT.POther): nothing was made.\nconst refused = err => err.code === 500 && /CM_|violat|guideline|sensitive|moderat|inappropriate|risk/i.test(err.text);\n// 429 = every account (or the pinned one) is at its job limit: nothing was made, the next tick sends it again.\nconst nothingMade = err => err.code === 429;\n// 596 = the account's Kling login failed: nothing was made, so Start result makes it an error with the API's message.\n// Any other 5xx, or no answer at all: the job may have started and used credits, so it is never sent again.\nconst mayBeMade = err => !err.code || (err.code >= 500 && err.code !== 596 && !refused(err));\nconst SETUP = 'https://useapi.net/docs/start-here/setup-kling?utm_source=n8n&utm_medium=referral&utm_campaign=kling-sheet-batch';\nconst explain = (err, what) => {\n  if (err.code === 401) return `${what}: the useapi.net API token was refused. Open the \"useapi.net API token\" credential and check it: Name Authorization, Value Bearer followed by your token.`;\n  if (err.code === 402) return `${what}: ${err.text}. Check your useapi.net subscription.`;\n  if (err.code === 403) return `${what}: this Kling account can't use that model or setting yet (${err.text}). Nothing was charged. Pick another model, or pin an account that has it in the email column, then set status to new.`;\n  if (err.code === 404) return `${what}: ${err.text}. The email column must be a Kling account connected at useapi.net (${SETUP}).`;\n  if (err.code === 400) return `${what}: ${err.text}. Fix the row, then set status to new.`;\n  if (!err.code) return `${what}: no answer from useapi.net (${err.text}).`;\n  return `${what}: ${err.text} (HTTP ${err.code})`;\n};\nconst clean = (v, n) => String(v == null ? '' : v).replace(/\\s+/g, ' ').trim().slice(0, n || 200);\nconst stamp = () => new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';\n\n// The clean master when the Kling plan allows it (GET /assets/download), else the preview, plus the account's\n// real credit balance read right now (Kling counts it in hundredths of a credit).\nconst S = $('Settings').first().json;\nreturn $input.all().map((it, i) => {\n  const t = $('Task result').itemMatching(i).json;\n  const c = $('Clean link').itemMatching(i).json;\n  const cdn = !apiErr(c) && c && c.cdnUrl ? c.cdnUrl : '';\n  const url = S.cleanMaster && cdn ? cdn : t.preview;\n  const total = !apiErr(it.json) && it.json.balance ? it.json.balance.total : null;\n  const u = { ...t.update, status: 'done', finished: stamp(), video_url: url,\n    credits_left: total == null ? '' : (Number(total) / 100).toFixed(2),\n    note: S.cleanMaster && !cdn ? 'Preview with watermark: the clean master needs a paid Kling plan.' : '' };\n  return { json: { update: u, drive: !!S.saveToDrive, url, name: `kling-row-${u.row_number}-${t.task_id}.mp4` } };\n});\n"
+      },
+      "name": "Finish row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3180,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d982fabc-eda6-598f-b386-962b85aecc0e",
+              "leftValue": "={{ $json.drive }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Save to Drive?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3400,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.url }}",
+        "options": {
+          "timeout": 300000,
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "name": "Download video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3620,
+        780
+      ],
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Finish row').item.json.name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Settings').first().json.driveFolderId || 'root' }}"
+        },
+        "options": {}
+      },
+      "name": "Upload to Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3840,
+        780
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "googleDriveCred",
+          "name": "Google Drive account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn $input.all().map((it, i) => {\n  const f = $('Finish row').itemMatching(i).json;\n  const u = { ...f.update };\n  if (it.json.id) u.drive_link = `https://drive.google.com/file/d/${it.json.id}/view`;\n  else u.note = `Done, but the Drive copy failed (${(it.json.error && it.json.error.message) || 'no answer'}). video_url still has it.`;\n  return { json: { update: u } };\n});\n"
+      },
+      "name": "Drive link",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4060,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Every change to a row arrives here as { update }: write only those columns, matched on row_number.\nreturn $input.all().filter(it => it.json && it.json.update).map(it => ({ json: it.json.update }));\n"
+      },
+      "name": "Row values",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4360,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Settings').first().json.sheetId }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ $('Settings').first().json.sheetName }}"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "image_url",
+              "displayName": "image_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "end_image_url",
+              "displayName": "end_image_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "model",
+              "displayName": "model",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mode",
+              "displayName": "mode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "duration",
+              "displayName": "duration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "aspect_ratio",
+              "displayName": "aspect_ratio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "account",
+              "displayName": "account",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "task_id",
+              "displayName": "task_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "started",
+              "displayName": "started",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "finished",
+              "displayName": "finished",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_url",
+              "displayName": "video_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "drive_link",
+              "displayName": "drive_link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "credits_left",
+              "displayName": "credits_left",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "note",
+              "displayName": "note",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Update row",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        4580,
+        420
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "googleSheetsCred",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Kling 4.0 video queue in Google Sheets across your Kling accounts\n\nFor studios, agencies and creators who make Kling videos in volume on their own Kling accounts and want one queue that keeps all of them busy.\n\nIt runs through the [useapi.net Kling API](https://useapi.net/docs/api-kling-v1?utm_source=n8n&utm_medium=referral&utm_campaign=kling-sheet-batch), **a third-party API, not affiliated with Kuaishou or Kling AI**, on the Kling accounts you connect there.\n\n**How it works**\n1. One sheet row is one video: a prompt, an optional start and end image, and the model, quality, duration and aspect ratio. The form adds many prompts at once.\n2. Every 5 minutes a tick reads your accounts' free job slots and starts new rows. A row without `email` goes to any account with a free slot ([how](https://useapi.net/docs/api-kling-v1?utm_source=n8n&utm_medium=referral&utm_campaign=kling-sheet-batch#run-several-kling-accounts)). A row with `email` runs on that account.\n3. The task id and the account go into the row in the same tick, so a restart reads the task instead of paying twice.\n4. A finished row gets the video link (the clean master on paid Kling plans), the account's credits left and, if you turn it on, a Google Drive copy.\n\nA busy `429` waits for the next tick. A refused or invalid row, or a failed login (`596`), gets `error` and a note. A start that may have used credits (other `5xx`, no answer) is never resent: `check job`.\n\n**Set up**\n1. Get a [useapi.net API token](https://useapi.net/docs/start-here/setup-useapi?utm_source=n8n&utm_medium=referral&utm_campaign=kling-sheet-batch) and connect your Kling accounts with [Setup Kling](https://useapi.net/docs/start-here/setup-kling?utm_source=n8n&utm_medium=referral&utm_campaign=kling-sheet-batch).\n2. Create a **Header Auth** credential: Name `Authorization`, Value `Bearer <your token>`. Select it on the useapi.net HTTP Request nodes.\n3. Copy the sheet columns from [GitHub](https://github.com/useapi/kling-api/tree/main/n8n), connect Google Sheets, and set `sheetId` in **Settings**.\n4. Create a **Basic Auth** credential and select it on **Add to the Kling queue**, so only you can add jobs.\n5. Publish (activate) the workflow.\n\nYou need a useapi.net subscription ($15/month for 3 accounts on each service, $10 for each extra 3) and Kling accounts. The free Kling plan works for 720p. 1080p and clean masters need a paid plan.\n\nDefaults, per-tick limits and Drive are in **Settings**.",
+        "width": 700,
+        "height": 800
+      },
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -760,
+        -130
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### 1. Add prompts from a form\nOne prompt per line, `prompt | start image | end image` for image-to-video. Each line becomes a `new` row. Basic Auth keeps the form yours.",
+        "width": 720,
+        "height": 300,
+        "color": 5
+      },
+      "name": "Note: form",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        620,
+        -130
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### 2. Every 5 minutes\nFree reads: your accounts, their free job slots (`maxJobs` per account) and the running tasks. **Plan the tick** checks each `new` row (model, duration, mode, links) and starts at most `maxStartsPerTick`, never more than the free slots.",
+        "width": 1380,
+        "height": 300,
+        "color": 5
+      },
+      "name": "Note: tick",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        620,
+        290
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### 3. Start the jobs\nNo `email` in the row: the API picks a healthy account with a free slot. The task id and account are written at once. Paid calls are never retried by n8n: only `429` waits for the next tick.",
+        "width": 500,
+        "height": 300,
+        "color": 5
+      },
+      "name": "Note: start",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        110
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### 4. Finished videos\n**Read task** polls each `rendering` row on its account. **Clean link** asks for the non-watermarked master (paid Kling plans) and **Read balance** gives the real credits left. Optional Drive copy, then one write per row.",
+        "width": 2220,
+        "height": 300,
+        "color": 5
+      },
+      "name": "Note: finish",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        640
+      ]
+    }
+  ],
+  "connections": {
+    "Add to the Kling queue": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every 5 minutes": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "From the form?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "From the form?": {
+      "main": [
+        [
+          {
+            "node": "Form rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Accounts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form rows": {
+      "main": [
+        [
+          {
+            "node": "Append rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append rows": {
+      "main": [
+        [
+          {
+            "node": "Queued",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Accounts": {
+      "main": [
+        [
+          {
+            "node": "Free slots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Free slots": {
+      "main": [
+        [
+          {
+            "node": "Running tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Running tasks": {
+      "main": [
+        [
+          {
+            "node": "Read rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read rows": {
+      "main": [
+        [
+          {
+            "node": "Plan the tick",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan the tick": {
+      "main": [
+        [
+          {
+            "node": "Row step",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Row step": {
+      "main": [
+        [
+          {
+            "node": "Start job",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Row values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start job": {
+      "main": [
+        [
+          {
+            "node": "Start result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start result": {
+      "main": [
+        [
+          {
+            "node": "Row values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read task": {
+      "main": [
+        [
+          {
+            "node": "Task result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Task result": {
+      "main": [
+        [
+          {
+            "node": "Task next",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Task next": {
+      "main": [
+        [
+          {
+            "node": "Clean link",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Row values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean link": {
+      "main": [
+        [
+          {
+            "node": "Read balance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read balance": {
+      "main": [
+        [
+          {
+            "node": "Finish row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finish row": {
+      "main": [
+        [
+          {
+            "node": "Save to Drive?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Drive?": {
+      "main": [
+        [
+          {
+            "node": "Download video",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Row values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download video": {
+      "main": [
+        [
+          {
+            "node": "Upload to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Drive": {
+      "main": [
+        [
+          {
+            "node": "Drive link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Drive link": {
+      "main": [
+        [
+          {
+            "node": "Row values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Row values": {
+      "main": [
+        [
+          {
+            "node": "Update row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
