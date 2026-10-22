@@ -1,18 +1,18 @@
 # Kling 4.0 / v3 / v2.x video — Kling API batch generation (Node.js)
 
-Batch-generate [Kling 4.0](https://app.klingai.com) (and v3, v3 Turbo, 2.6, 2.5, 2.1, 1.6) text-to-video through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
+Batch-generate [Kling 4.0](https://kling.ai/app) (and v3, v3 Turbo, 2.6, 2.5, 2.1, 1.6) text-to-video through the [Kling API](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
-Full walkthrough: **[How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash)**
+Full walkthrough: [How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)
 
 Videos made with this API, on YouTube: [Christmas is Coming • Kling v2.6](https://www.youtube.com/watch?v=oqVPl9V9jIw) · [No More Tylenol • Kling v2.5](https://www.youtube.com/watch?v=dCSwOizOJKU) · [Disco Twerking • Kling 2.1-master with audio](https://youtube.com/shorts/3S1cvi7uuFg) · [No Smoking! • Kling v2.1](https://youtube.com/shorts/9iqDRfOTmn8) · [KLING 2.1 End Frame](https://youtube.com/shorts/nh333dq0grs)
 
-`kling.mjs` reads prompts from `prompts.json`, submits each job to [`POST /videos/text2video`](https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video), polls [`GET /tasks/{task_id}`](https://useapi.net/docs/api-kling-v1/get-kling-tasks-task_id) until each task is final, and downloads every finished MP4 — preferring the clean, non-watermarked master via [`GET /assets/download`](https://useapi.net/docs/api-kling-v1/get-kling-assets-download) and falling back to the watermarked `works[0].resource.resource` if needed.
+`kling.mjs` reads prompts from `prompts.json`, submits each job to [`POST /videos/text2video`](https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api), polls [`GET /tasks/{task_id}`](https://useapi.net/docs/api-kling-v1/get-kling-tasks-task_id?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) until each task is final, and downloads every finished MP4 — preferring the clean, non-watermarked master via [`GET /assets/download`](https://useapi.net/docs/api-kling-v1/get-kling-assets-download?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) and falling back to the watermarked `works[0].resource.resource` if needed.
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org) v21 or newer (no dependencies to install — uses built-in `fetch`)
 - A useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)
-- A connected [Kling account](https://useapi.net/docs/start-here/setup-kling) email
+- A connected [Kling account](https://useapi.net/docs/start-here/setup-kling?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) email, on a Kling AI subscription of Standard or higher (the Free plan runs only text-to-speech and face detection)
 
 ## Usage
 
@@ -24,11 +24,11 @@ node ./kling.mjs <API_TOKEN> <EMAIL> [PROMPTS_FILE]
 
 ## Prompts
 
-`prompts.json` is an array of prompt objects — `prompt` is the only required field; the default model is `kling-v1-6`, with a `16:9` aspect ratio, `std` (720p) mode, and a 5-second duration. Pick another model with `model_name` (`kling-v4-0`, `kling-v3-0`, `kling-v3-0-turbo`, `kling-v2-6`, `kling-v2-5`, `kling-v2-1-master`, `kling-v1-6`, `kling-v1-5`). `kling-v4-0` (Kling 4.0) takes 3 to 30 seconds, `std` (720p) or `pro` (1080p, paid Kling plan), adds the `21:9` aspect ratio, always generates stereo audio and accepts prompts up to 8000 characters. `negative_prompt` and `cfg_scale` apply only to the 1.x models. Every supported parameter is documented on [POST /videos/text2video](https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video).
+`prompts.json` is an array of prompt objects — `prompt` is the only required field; the default model is `kling-v1-6`, with a `16:9` aspect ratio, `std` (720p) mode, and a 5-second duration. Pick another model with `model_name` (`kling-v4-0`, `kling-v3-0`, `kling-v3-0-turbo`, `kling-v2-6`, `kling-v2-5`, `kling-v2-1-master`, `kling-v1-6`, `kling-v1-5`). `kling-v4-0` (Kling 4.0) takes 3 to 30 seconds, `std` (720p) or `pro` (1080p), adds the `21:9` aspect ratio, always generates stereo audio and accepts prompts up to 8000 characters. `negative_prompt` and `cfg_scale` apply only to the 1.x models. Every supported parameter is documented on [POST /videos/text2video](https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
 ## Image-to-video
 
-This script covers text-to-video. To animate a still image, upload it with [POST /assets](https://useapi.net/docs/api-kling-v1/post-kling-assets) and pass the returned URL as `image` (start frame) and optionally `image_tail` (end frame) to [POST /videos/image2video-frames](https://useapi.net/docs/api-kling-v1/post-kling-videos-image2video-frames) — the response is the same task object, polled and downloaded exactly the same way. See the [Image-to-video section](https://useapi.net/docs/articles/kling-bash#image-to-video) of the tutorial.
+This script covers text-to-video. To animate a still image, upload it with [POST /assets](https://useapi.net/docs/api-kling-v1/post-kling-assets?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) and pass the returned URL as `image` (start frame) and optionally `image_tail` (end frame) to [POST /videos/image2video-frames](https://useapi.net/docs/api-kling-v1/post-kling-videos-image2video-frames?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — the response is the same task object, polled and downloaded exactly the same way. See the [Image-to-video section](https://useapi.net/docs/articles/kling-bash?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api#image-to-video) of the tutorial.
 
 ---
 

@@ -2,7 +2,7 @@
 
 ## Kling 4.0 video queue in Google Sheets across your Kling accounts
 
-[`kling-sheet-batch.json`](./kling-sheet-batch.json) is a ready-to-import [n8n](https://n8n.io) workflow that turns a Google Sheet into a Kling video queue and keeps all your Kling accounts busy. Each row is one Kling 4.0 (or v3) video, from text or from a start and end image. It runs through the [useapi.net Kling API](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api), a third-party API, not affiliated with Kuaishou or Kling AI, on the Kling accounts you connect there. It is built from core n8n nodes, with no community nodes.
+[`kling-sheet-batch.json`](./kling-sheet-batch.json) is a ready-to-import [n8n](https://n8n.io) workflow that turns a Google Sheet into a Kling video queue and keeps all your Kling accounts busy. Each row is one Kling 4.0 (or v3) video, from text or from a start and end image. It runs through the [useapi.net Kling API](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api), a third-party API, not affiliated with Kuaishou Technology or Kling AI, on the Kling accounts you connect there. It is built from core n8n nodes, with no community nodes.
 
 One useapi.net subscription connects 3 Kling accounts for $15 a month, and each extra 3 cost $10 a month, so 10 accounts cost $45 a month and 30 cost $105 (as of October 2026). See [Run several Kling accounts](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api#run-several-kling-accounts).
 
@@ -12,7 +12,7 @@ One useapi.net subscription connects 3 Kling accounts for $15 a month, and each 
 2. The form is optional. Paste many prompts at once, one per line. Add `|` and an image link after a prompt to animate that image (and `|` and an end image link). Each line becomes a `new` row.
 3. Every 5 minutes, the workflow reads your accounts, their free job slots and the running tasks (all free calls), then starts the `new` rows. A row without `email` goes to one of your healthy Kling accounts that has a free job slot: the API picks it. A row with `email` runs on that account. At most `maxStartsPerTick` jobs start per tick (default 10), and never more than your accounts have free slots, so each account stays within the `maxJobs` you set for it at useapi.net.
 4. The same tick writes the task id and the account into the row, so a restart or a late tick reads the task instead of paying twice.
-5. Finished rows get the video link (the clean, non-watermarked master when the Kling plan allows it, else the preview), the account's real credit balance at that moment in `credits_left`, and, with `saveToDrive` on, a copy in Google Drive with its link in `drive_link`.
+5. Finished rows get the video link (the clean, non-watermarked master when the Kling AI subscription allows it, else the preview), the account's real credit balance at that moment in `credits_left`, and, with `saveToDrive` on, a copy in Google Drive with its link in `drive_link`.
 
 | `status` | What happens next |
 |---|---|
@@ -42,7 +42,7 @@ The video links in the sheet are Kling's own CDN links, and the workflow downloa
 
 ### Requirements
 
-You need a useapi.net subscription and one or more Kling accounts. The free Kling plan works for 720p. 1080p on Kling 4.0 (`mode` `pro`) needs a paid Kling plan, and Kling 4.0 must be open to the account (a `403` says when it isn't yet).
+You need a useapi.net subscription and one or more Kling accounts. Videos need a paid Kling AI subscription (Standard or higher), since the free plan has no video credits, and Kling 4.0 must be open to the account (a `403` says when it isn't yet).
 
 ### Customize
 

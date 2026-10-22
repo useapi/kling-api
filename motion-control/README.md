@@ -1,18 +1,18 @@
 # Kling motion control — Kling API batch generation (Node.js)
 
-Batch-transfer motion from a reference video onto a static image through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — the person in your image performs the action from the video.
+Batch-transfer motion from a reference video onto a static image through the [Kling API](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — the person in your image performs the action from the video.
 
-Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#motion-control)**
+Full walkthrough: [Kling Lip-Sync Avatars, Motion Control & Image Generation via the Kling API](https://useapi.net/docs/articles/kling-features-bash?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api#motion-control)
 
 Videos made with this API, on YouTube: [Smooth Criminal • Kling Motion 3.0](https://youtube.com/shorts/VztjBYqqQ1A) · [Kling Motion Control / Mureka Music](https://youtube.com/shorts/TUAUO5cAlac)
 
-`kling-motion.mjs` reads prompts from `prompts.json`, submits each one to [`POST /videos/motion-create`](https://useapi.net/docs/api-kling-v1/post-kling-videos-motion-create), polls [`GET /tasks/{task_id}`](https://useapi.net/docs/api-kling-v1/get-kling-tasks-task_id) until each task is final, and downloads every finished MP4 — preferring the clean, non-watermarked master via [`GET /assets/download`](https://useapi.net/docs/api-kling-v1/get-kling-assets-download).
+`kling-motion.mjs` reads prompts from `prompts.json`, submits each one to [`POST /videos/motion-create`](https://useapi.net/docs/api-kling-v1/post-kling-videos-motion-create?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api), polls [`GET /tasks/{task_id}`](https://useapi.net/docs/api-kling-v1/get-kling-tasks-task_id?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) until each task is final, and downloads every finished MP4 — preferring the clean, non-watermarked master via [`GET /assets/download`](https://useapi.net/docs/api-kling-v1/get-kling-assets-download?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org) v21 or newer (no dependencies to install — uses built-in `fetch`)
 - A useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)
-- A connected [Kling account](https://useapi.net/docs/start-here/setup-kling) email
+- A connected [Kling account](https://useapi.net/docs/start-here/setup-kling?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) email, on a Kling AI subscription of Standard or higher (the Free plan runs only text-to-speech and face detection)
 
 ## Usage
 
@@ -24,9 +24,9 @@ node ./kling-motion.mjs <API_TOKEN> <EMAIL> [PROMPTS_FILE]
 
 ## Prompts
 
-Each prompt needs an `imageUrl` (a person with a clearly visible pose) and a `motionUrl` (a 3–30 second reference video). Upload both via [POST /assets](https://useapi.net/docs/api-kling-v1/post-kling-assets) first — use the response `url` field for `imageUrl` and the `resourceUrl` field for `motionUrl` (or pull an official/previous motion from [GET /videos/motions](https://useapi.net/docs/api-kling-v1/get-kling-videos-motions)).
+Each prompt needs an `imageUrl` (a person with a clearly visible pose) and a `motionUrl` (a 3–30 second reference video). Upload both via [POST /assets](https://useapi.net/docs/api-kling-v1/post-kling-assets?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) first — use the response `url` field for `imageUrl` and the `resourceUrl` field for `motionUrl` (or pull an official/previous motion from [GET /videos/motions](https://useapi.net/docs/api-kling-v1/get-kling-videos-motions?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)).
 
-`model_name` defaults to `kling-v3-0` (or `kling-v2-6`); the output duration is detected from the motion video. Optional: `prompt`, `keepAudio` (keep the reference video's sound), `motionDirection` (`motion_direction` default, or `image_direction`), `mode`, and on v3 an `element_1` for stronger character consistency. The endpoint returns a `400` with `MOTION.PIC_NOT_MATCHED` if it can't detect a person in the image. The placeholder asset URLs in `prompts.json` are examples — replace them with your own. Every parameter is documented on [POST /videos/motion-create](https://useapi.net/docs/api-kling-v1/post-kling-videos-motion-create).
+`model_name` defaults to `kling-v3-0` (or `kling-v2-6`); the output duration is detected from the motion video. Optional: `prompt`, `keepAudio` (keep the reference video's sound), `motionDirection` (`motion_direction` default, or `image_direction`), `mode`, and on v3 an `element_1` for stronger character consistency. The endpoint returns a `400` with `MOTION.PIC_NOT_MATCHED` if it can't detect a person in the image. The placeholder asset URLs in `prompts.json` are examples — replace them with your own. Every parameter is documented on [POST /videos/motion-create](https://useapi.net/docs/api-kling-v1/post-kling-videos-motion-create?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
 ---
 

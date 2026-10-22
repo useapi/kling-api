@@ -1,18 +1,18 @@
 # Kling lip-sync avatars — Kling API batch generation (Node.js)
 
-Batch-generate talking [lip-sync avatar](https://app.klingai.com) videos through the [Kling API](https://useapi.net/docs/api-kling-v1) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — a digital character built from a single image that speaks from your text (voiced by Kling TTS) or from an audio file.
+Batch-generate talking [lip-sync avatar](https://kling.ai/app) videos through the [Kling API](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) — a digital character built from a single image that speaks from your text (voiced by Kling TTS) or from an audio file.
 
-Full walkthrough: **[Kling Lip-Sync Avatars, Motion Control & Image Generation](https://useapi.net/docs/articles/kling-features-bash#lip-sync--avatars)**
+Full walkthrough: [Kling Lip-Sync Avatars, Motion Control & Image Generation via the Kling API](https://useapi.net/docs/articles/kling-features-bash?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api#lip-sync--avatars)
 
 Video on YouTube: [Kling Avatar 2.0](https://youtube.com/shorts/nKw61pdzFmw)
 
-`kling-lip-sync.mjs` reads prompts from `prompts.json`, submits each one to [`POST /avatars/video`](https://useapi.net/docs/api-kling-v1/post-kling-avatars-video), polls [`GET /tasks/{task_id}`](https://useapi.net/docs/api-kling-v1/get-kling-tasks-task_id) until each task is final, and downloads every finished MP4 — preferring the clean, non-watermarked master via [`GET /assets/download`](https://useapi.net/docs/api-kling-v1/get-kling-assets-download).
+`kling-lip-sync.mjs` reads prompts from `prompts.json`, submits each one to [`POST /avatars/video`](https://useapi.net/docs/api-kling-v1/post-kling-avatars-video?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api), polls [`GET /tasks/{task_id}`](https://useapi.net/docs/api-kling-v1/get-kling-tasks-task_id?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) until each task is final, and downloads every finished MP4 — preferring the clean, non-watermarked master via [`GET /assets/download`](https://useapi.net/docs/api-kling-v1/get-kling-assets-download?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org) v21 or newer (no dependencies to install — uses built-in `fetch`)
 - A useapi.net [API token](https://useapi.net/docs/start-here/setup-useapi?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)
-- A connected [Kling account](https://useapi.net/docs/start-here/setup-kling) email
+- A connected [Kling account](https://useapi.net/docs/start-here/setup-kling?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) email, on a Kling AI subscription of Standard or higher (the Free plan runs only text-to-speech and face detection)
 
 ## Usage
 
@@ -24,18 +24,18 @@ node ./kling-lip-sync.mjs <API_TOKEN> <EMAIL> [PROMPTS_FILE]
 
 ## Prompts
 
-Each prompt needs **one avatar source** and **one audio source**:
+Each prompt needs one avatar source and one audio source:
 
-- **Avatar source:** `avatarId` (saved once with [POST /avatars](https://useapi.net/docs/api-kling-v1/post-kling-avatars)) **or** `imageUrl` (an image URL uploaded via [POST /assets](https://useapi.net/docs/api-kling-v1/post-kling-assets)).
-- **Audio source:** `text` (up to 5000 chars, with a required `speakerId` — list voices/emotions at [GET /tts/voices](https://useapi.net/docs/api-kling-v1/get-kling-tts-voices)) **or** `audioUrl` (a pre-recorded clip).
+- Avatar source: `avatarId` (saved once with [POST /avatars](https://useapi.net/docs/api-kling-v1/post-kling-avatars?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)) or `imageUrl` (an image URL uploaded via [POST /assets](https://useapi.net/docs/api-kling-v1/post-kling-assets?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)).
+- Audio source: `text` (up to 5000 chars, with a required `speakerId` — list voices/emotions at [GET /tts/voices](https://useapi.net/docs/api-kling-v1/get-kling-tts-voices?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)) or `audioUrl` (a pre-recorded clip).
 
-Optional, when you pass `text`: `emotion` (`neutral`, `happy`, `angry`, `sad`, `fearful`, `disgusted`, `surprised`), `speed` (0.8–2.0). `mode` is `std` (default) or `pro`. The placeholder `imageUrl` / `audioUrl` / `speakerId` values in `prompts.json` are examples — replace them with your own. Every parameter is documented on [POST /avatars/video](https://useapi.net/docs/api-kling-v1/post-kling-avatars-video).
+Optional, when you pass `text`: `emotion` (`neutral`, `happy`, `angry`, `sad`, `fearful`, `disgusted`, `surprised`), `speed` (0.8–2.0). `mode` is `std` (default) or `pro`. The placeholder `imageUrl` / `audioUrl` / `speakerId` values in `prompts.json` are examples — replace them with your own. Every parameter is documented on [POST /avatars/video](https://useapi.net/docs/api-kling-v1/post-kling-avatars-video?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
 ### Related (curl)
 
-Two more endpoints from the same account, covered in the [tutorial](https://useapi.net/docs/articles/kling-features-bash#lip-sync--avatars):
+Two more endpoints from the same account, covered in the [tutorial](https://useapi.net/docs/articles/kling-features-bash?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api#lip-sync--avatars):
 
-- **Free text-to-speech** (synchronous, returns the MP3 URL directly):
+- Free text-to-speech (synchronous, returns the MP3 URL directly):
 
   ```bash
   curl -X POST "https://api.useapi.net/v1/kling/tts/create" \
@@ -44,7 +44,7 @@ Two more endpoints from the same account, covered in the [tutorial](https://usea
     -d '{ "text": "Hello from Kling TTS.", "speakerId": "moss_audio_..." }'
   ```
 
-- **Re-sync an existing video** to a new audio track (both are URLs; video ≤ 60s):
+- Re-sync an existing video to a new audio track (both are URLs; video ≤ 60s):
 
   ```bash
   curl -X POST "https://api.useapi.net/v1/kling/videos/lipsync" \
