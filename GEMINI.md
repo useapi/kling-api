@@ -1,6 +1,6 @@
 # Kling via useapi.net
 
-This extension connects the hosted useapi.net Kling MCP server (`useapi-kling`, 45 tools). The tools make Kling 4.0, v3 and Omni video and images, avatars and lip-sync, with your Kling AI subscription.
+This extension connects the hosted useapi.net Kling MCP server (`useapi-kling`, 45 tools). The tools make Kling 4.0, 4.0 Flash, v3 and Omni video and images, avatars and lip-sync, with your Kling AI subscription.
 
 - Endpoint: https://api.useapi.net/v1/kling/mcp (Streamable HTTP), authorized with the user's useapi.net API token in `USEAPI_TOKEN`.
 - Before the tools work, the user needs a useapi.net API token (https://useapi.net/docs/start-here/setup-useapi) and an account connected at https://useapi.net/docs/start-here/setup-kling.

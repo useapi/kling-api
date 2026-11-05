@@ -7,5 +7,12 @@
         "keyframe_1": "middle.jpg",
         "image_tail": "end.jpg",
         "prompt": "the boat drifts from the puddle into the gutter stream"
+    },
+    {
+        "__comment": "Kling 4.0 Flash (kling-v4-0-flash) animates the start frame only: no keyframes and no image_tail. 720p (mode std) only, 3 to 20 seconds.",
+        "model_name": "kling-v4-0-flash",
+        "duration": "5",
+        "image": "start.jpg",
+        "prompt": "the boat spins slowly as rain ripples spread around it"
     }
 ]

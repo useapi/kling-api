@@ -1,10 +1,13 @@
 /*
 
-Script version 1.0, October 18, 2026
+Script version 1.1, November 5, 2026
 
-Script to batch-generate Kling 4.0 (kling-v4-0) videos with the Kling API v1 by useapi.net.
+Script to batch-generate Kling 4.0 (kling-v4-0) and Kling 4.0 Flash (kling-v4-0-flash) videos
+with the Kling API v1 by useapi.net.
 Text-to-video (one prompt, or up to 6 directed shots) and image-to-video with a start frame,
 an optional end frame and up to 9 keyframes in between.
+Kling 4.0 Flash: set "model_name": "kling-v4-0-flash" in a prompt. 720p (std) only, 3 to 20 seconds,
+no multi-shot, and image-to-video from the start frame only (no keyframes or end frame).
 Tutorial: https://useapi.net/docs/articles/kling-4-api
 Endpoints: https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video
            https://useapi.net/docs/api-kling-v1/post-kling-videos-image2video-frames
@@ -40,6 +43,8 @@ Changelog:
 ==========
 
 - October 18, 2026: Initial release.
+- November 5, 2026: Kling 4.0 Flash (kling-v4-0-flash) with an optional per-prompt model_name
+  (default kling-v4-0), checked against its limits: 720p (std) only, 3-20s, start frame only, no multi-shot.
 
 */
 
@@ -51,7 +56,9 @@ import { Readable } from 'node:stream';
 
 
 // Constants
-const MODEL = 'kling-v4-0';
+const DEFAULT_MODEL = 'kling-v4-0';
+const FLASH_MODEL = 'kling-v4-0-flash';
+const MODELS = [DEFAULT_MODEL, FLASH_MODEL];
 const RESULTS_FILE = 'kling4_results.txt';
 const ERRORS_FILE = 'kling4_errors.txt';
 const DEFAULT_PROMPTS_FILE = 'prompts.json';
@@ -69,13 +76,16 @@ const urlAssetsDownload = 'https://api.useapi.net/v1/kling/assets/download';
 // Kling 4.0 limits, see the endpoint pages above.
 const DURATION_MIN = 3, DURATION_MAX = 30, DURATION_DEFAULT = 5;
 const MODES = ['std', 'pro'];                       // std = 720p, pro = 1080p (paid Kling plan)
+// Kling 4.0 Flash: 720p only, 3 to 20 seconds, start frame only (no image_tail, keyframes or multi-shot).
+const FLASH_DURATION_MAX = 20;
+const FLASH_MODES = ['std'];
 const ASPECT_RATIOS = ['16:9', '9:16', '1:1', '21:9']; // text-to-video only; image-to-video takes it from the start image
 const MAX_PROMPT = 8000;
 const MAX_SHOTS = 6, MAX_SHOT_PROMPT = 2500, SHOTS_TOTAL_MIN = 3, SHOTS_TOTAL_MAX = 15;
 const MAX_KEYFRAMES = 9, MAX_IMAGES = 10;
 const IMAGE_TYPES = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg' };
 
-const supportedParams = ['prompt', 'mode', 'duration', 'aspect_ratio', 'multi_shot', 'image', 'image_tail', 'replyUrl', 'replyRef',
+const supportedParams = ['model_name', 'prompt', 'mode', 'duration', 'aspect_ratio', 'multi_shot', 'image', 'image_tail', 'replyUrl', 'replyRef',
     ...Array.from({ length: MAX_SHOTS }, (_, i) => [`shot_${i + 1}_prompt`, `shot_${i + 1}_duration`]).flat(),
     ...Array.from({ length: MAX_KEYFRAMES }, (_, i) => `keyframe_${i + 1}`)];
 
@@ -132,17 +142,21 @@ async function resolveImage(apiToken, email, value, promptFile) {
     return url;
 }
 
-// Submit a single Kling 4.0 prompt. Image prompts go to image2video-frames, the rest to text2video.
+// The model of a prompt: its model_name, or Kling 4.0 by default.
+const modelOf = (prompt) => prompt.model_name ?? DEFAULT_MODEL;
+
+// Submit a single Kling 4.0 / 4.0 Flash prompt. Image prompts go to image2video-frames, the rest to text2video.
 // Returns { status, taskId }.
 async function submitVideo(apiToken, email, prompt, index) {
+    const model = modelOf(prompt);
     const isImage = prompt.image !== undefined || prompt.image_tail !== undefined;
     const shots = shotCount(prompt);
     const label = prompt.prompt ?? prompt.shot_1_prompt ?? '';
     const length = shots ? `${shots} shots` : `${prompt.duration ?? DURATION_DEFAULT}s`;
 
-    console.log(`${MODEL} ${isImage ? 'image-to-video' : 'text-to-video'} » Prompt #${index} • ${email} • ${prompt.mode ?? 'std'} • ${length} …`);
+    console.log(`${model} ${isImage ? 'image-to-video' : 'text-to-video'} » Prompt #${index} • ${email} • ${prompt.mode ?? 'std'} • ${length} …`);
 
-    const body = JSON.stringify({ ...prompt, email, model_name: MODEL });
+    const body = JSON.stringify({ ...prompt, email, model_name: model });
 
     const createResponse = await fetch(isImage ? urlImage2Video : urlText2Video, {
         method: 'POST',
@@ -181,8 +195,8 @@ async function submitVideo(apiToken, email, prompt, index) {
                 await fs.appendFile(ERRORS_FILE, `${createResponse.status},#${index}:${note}\n`);
                 break;
             case 403:
-                // AUTH.VPrivilegeEscalation = Kling has not opened Kling 4.0 to this account yet. Nothing is charged.
-                console.log(`Kling 4.0 not available on this account yet (nothing charged)`, createBody);
+                // AUTH.VPrivilegeEscalation = Kling has not opened Kling 4.0 (or 4.0 Flash) to this account yet. Nothing is charged.
+                console.log(`${model} not available on this account yet (nothing charged)`, createBody);
                 await fs.appendFile(ERRORS_FILE, `${createResponse.status},#${index}:${note}\n`);
                 break;
             case 500:
@@ -302,22 +316,36 @@ async function download(apiToken, email) {
     }
 }
 
-// Check one prompt against the Kling 4.0 limits. Returns a list of warnings.
+// Check one prompt against the Kling 4.0 / 4.0 Flash limits. Returns a list of warnings.
 function validate(prompt, i) {
     const warnings = [];
     const w = (text) => warnings.push(`${text}. Prompt ${i}`);
 
     const notSupported = Object.keys(prompt).filter(key => !key.startsWith('__') && !supportedParams.includes(key));
     if (notSupported.length)
-        w(`Following params not supported: ${notSupported.join(',')} (model_name is always ${MODEL}; negative_prompt, cfg_scale and enable_audio don't apply to Kling 4.0)`);
+        w(`Following params not supported: ${notSupported.join(',')} (negative_prompt, cfg_scale and enable_audio don't apply to Kling 4.0 or 4.0 Flash)`);
+
+    const model = modelOf(prompt);
+    if (!MODELS.includes(model))
+        w(`model_name must be one of ${MODELS.join(', ')} (default ${DEFAULT_MODEL})`);
+    const isFlash = model === FLASH_MODEL;
+    const modes = isFlash ? FLASH_MODES : MODES;
+    const durationMax = isFlash ? FLASH_DURATION_MAX : DURATION_MAX;
 
     const isImage = prompt.image !== undefined || prompt.image_tail !== undefined;
     const shots = shotCount(prompt);
 
-    if (prompt.mode !== undefined && !MODES.includes(prompt.mode))
-        w(`mode must be one of ${MODES.join(', ')}`);
+    if (prompt.mode !== undefined && !modes.includes(prompt.mode))
+        w(`mode must be one of ${modes.join(', ')}${isFlash ? ' (Kling 4.0 Flash makes 720p only)' : ''}`);
 
-    if (prompt.multi_shot !== undefined && prompt.multi_shot !== true)
+    if (isFlash) {
+        if (prompt.multi_shot !== undefined)
+            w(`Kling 4.0 Flash takes no multi_shot (not even false)`);
+        if (shots)
+            w(`Kling 4.0 Flash takes no shot_N_prompt / shot_N_duration (no custom multi-shot)`);
+        if (prompt.image_tail !== undefined || Object.keys(prompt).some(k => k.startsWith('keyframe_')))
+            w(`Kling 4.0 Flash animates the start frame (image) only: no image_tail or keyframes`);
+    } else if (prompt.multi_shot !== undefined && prompt.multi_shot !== true)
         w(`Kling 4.0 accepts only multi_shot: true`);
 
     if (shots) {
@@ -343,8 +371,8 @@ function validate(prompt, i) {
             w(`prompt exceeds ${MAX_PROMPT} characters`);
         if (prompt.duration !== undefined) {
             const d = Number(prompt.duration);
-            if (!Number.isInteger(d) || d < DURATION_MIN || d > DURATION_MAX)
-                w(`duration must be ${DURATION_MIN} to ${DURATION_MAX} seconds`);
+            if (!Number.isInteger(d) || d < DURATION_MIN || d > durationMax)
+                w(`duration must be ${DURATION_MIN} to ${durationMax} seconds for ${model}`);
         }
     }
 
@@ -385,7 +413,7 @@ async function main() {
         process.exit(1);
     }
 
-    console.info('Script v1.0');
+    console.info('Script v1.1');
 
     console.info('Node version is: ' + process.version);
 

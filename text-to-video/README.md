@@ -1,6 +1,6 @@
-# Kling 4.0 / v3 / v2.x video — Kling API batch generation (Node.js)
+# Kling 4.0 / 4.0 Flash / v3 / v2.x video — Kling API batch generation (Node.js)
 
-Batch-generate [Kling 4.0](https://kling.ai/app) (and v3, v3 Turbo, 2.6, 2.5, 2.1, 1.6) text-to-video through the [Kling API](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
+Batch-generate [Kling 4.0](https://kling.ai/app) (and 4.0 Flash, v3, v3 Turbo, 2.6, 2.5, 2.1, 1.6) text-to-video through the [Kling API](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) by [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
 Full walkthrough: [How to Generate AI Video with Kling v3 via the Kling API](https://useapi.net/docs/articles/kling-bash?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)
 
@@ -24,7 +24,7 @@ node ./kling.mjs <API_TOKEN> <EMAIL> [PROMPTS_FILE]
 
 ## Prompts
 
-`prompts.json` is an array of prompt objects — `prompt` is the only required field; the default model is `kling-v1-6`, with a `16:9` aspect ratio, `std` (720p) mode, and a 5-second duration. Pick another model with `model_name` (`kling-v4-0`, `kling-v3-0`, `kling-v3-0-turbo`, `kling-v2-6`, `kling-v2-5`, `kling-v2-1-master`, `kling-v1-6`, `kling-v1-5`). `kling-v4-0` (Kling 4.0) takes 3 to 30 seconds, `std` (720p) or `pro` (1080p), adds the `21:9` aspect ratio, always generates stereo audio and accepts prompts up to 8000 characters. `negative_prompt` and `cfg_scale` apply only to the 1.x models. Every supported parameter is documented on [POST /videos/text2video](https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
+`prompts.json` is an array of prompt objects — `prompt` is the only required field; the default model is `kling-v1-6`, with a `16:9` aspect ratio, `std` (720p) mode, and a 5-second duration. Pick another model with `model_name` (`kling-v4-0`, `kling-v4-0-flash`, `kling-v3-0`, `kling-v3-0-turbo`, `kling-v2-6`, `kling-v2-5`, `kling-v2-1-master`, `kling-v1-6`, `kling-v1-5`). `kling-v4-0` (Kling 4.0) takes 3 to 30 seconds, `std` (720p) or `pro` (1080p), adds the `21:9` aspect ratio, always generates stereo audio and accepts prompts up to 8000 characters. `kling-v4-0-flash` (Kling 4.0 Flash) is a lower-cost 720p version: 3 to 20 seconds, `std` only, always with sound, the same aspect ratios and 8000-character prompts, and no multi-shot. `negative_prompt` and `cfg_scale` apply only to the 1.x models. Every supported parameter is documented on [POST /videos/text2video](https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
 ## Image-to-video
 

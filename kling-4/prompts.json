@@ -20,5 +20,12 @@
         "shot_1_duration": "3",
         "shot_2_prompt": "The barista slides the cup across the counter to a smiling customer, who says: thank you, this is perfect",
         "shot_2_duration": "4"
+    },
+    {
+        "__comment": "Kling 4.0 Flash: a lower-cost Kling 4.0 at 6 credits a second. 720p (mode std) only, 3 to 20 seconds, always with sound, aspect ratios 16:9, 9:16, 1:1 and 21:9. No multi-shot.",
+        "model_name": "kling-v4-0-flash",
+        "duration": "5",
+        "aspect_ratio": "9:16",
+        "prompt": "A street musician plays a saxophone under a bridge at night, warm lamplight on wet cobblestones, passers-by stop to listen and one drops a coin into the open case, slow orbit around him"
     }
 ]

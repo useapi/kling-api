@@ -1,10 +1,11 @@
 /*
 
-Script version 1.0, June 22, 2026
+Script version 1.1, November 5, 2026
 
 Script to batch-generate videos using prompts with the Kling API v1 by useapi.net 🚀
 Uses the asynchronous Omni endpoint (POST /videos/omni): multi-image reference,
 saved Video Elements, and v3 multi-shot sequences.
+omni_version: o1, v3 (default), v4 (Kling 4.0) or v4-flash (Kling 4.0 Flash: 720p (std) only, 3-20s, no voices).
 For more details visit https://useapi.net/docs/api-kling-v1/post-kling-videos-omni
 
 Installation Instructions:
@@ -42,6 +43,8 @@ Changelog:
 ==========
 
 - June 22, 2026: Initial release.
+- November 5, 2026: omni_version is checked (o1, v3, v4, v4-flash). v4 and v4-flash take prompts up to
+  8000 characters; v4 runs 3-30s and v4-flash 3-20s at std (720p) only. Multi-shot is v3 only.
 
 */
 
@@ -297,7 +300,7 @@ async function main() {
         process.exit(1);
     }
 
-    console.info('Script v1.0');
+    console.info('Script v1.1');
 
     console.info('Node version is: ' + process.version);
 
@@ -369,9 +372,18 @@ async function execute(apiToken, email, promptFile) {
 
     const invalidKeys = (prompt) => Object.keys(prompt).filter(key => !key.startsWith('__') && !supportedParams.includes(key))
 
+    // Version limits, see https://useapi.net/docs/api-kling-v1/post-kling-videos-omni
+    const versions = ['o1', 'v3', 'v4', 'v4-flash'];
+    const v4Limits = { 'v4': { max: 30, modes: ['std', 'pro'] }, 'v4-flash': { max: 20, modes: ['std'] } };
+
     for (let i = 1; i <= prompts.length; i++) {
         const prompt = prompts[i - 1];
-        const { prompt: text, shots } = prompt;
+        const { prompt: text, shots, duration, mode } = prompt;
+        const version = prompt.omni_version ?? 'v3';
+        const v4 = v4Limits[version];
+
+        if (!versions.includes(version))
+            warnings.push(`omni_version must be one of ${versions.join(', ')} (default v3). Prompt ${i}`);
 
         const notSupported = invalidKeys(prompt);
         if (notSupported.length)
@@ -385,6 +397,17 @@ async function execute(apiToken, email, promptFile) {
         if (text && hasShots)
             warnings.push(`⚠️  prompt and shots cannot be combined — multi-shot replaces the single prompt. Prompt ${i}`);
 
+        if (hasShots && version !== 'v3')
+            warnings.push(`multi-shot (shots) is v3 only, not ${version}. Prompt ${i}`);
+
+        if (v4) {
+            const d = Number(duration);
+            if (duration !== undefined && (!Number.isInteger(d) || d < 3 || d > v4.max))
+                warnings.push(`duration must be 3 to ${v4.max} seconds with ${version}. Prompt ${i}`);
+            if (mode !== undefined && !v4.modes.includes(mode))
+                warnings.push(`mode must be ${v4.modes.join(' or ')} with ${version}. Prompt ${i}`);
+        }
+
         if (hasShots) {
             if (shots.length < 2 || shots.length > 6)
                 warnings.push(`⚠️  multi-shot requires 2 to 6 shots. Prompt ${i}`);
@@ -397,8 +420,10 @@ async function execute(apiToken, email, promptFile) {
             });
         }
 
-        if (text && text.length > 1700)
-            warnings.push(`⚠️  prompt exceeds 1700 characters. Prompt ${i}`);
+        // v4 and v4-flash take prompts up to 8000 characters, o1 and v3 up to 1700.
+        const maxPrompt = v4 ? 8000 : 1700;
+        if (text && text.length > maxPrompt)
+            warnings.push(`⚠️  prompt exceeds ${maxPrompt} characters. Prompt ${i}`);
     }
 
     if (warnings.length > 0) {

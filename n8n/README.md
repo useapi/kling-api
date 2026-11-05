@@ -2,7 +2,7 @@
 
 ## Kling 4.0 video queue in Google Sheets across your Kling accounts
 
-[`kling-sheet-batch.json`](./kling-sheet-batch.json) is a ready-to-import [n8n](https://n8n.io) workflow that turns a Google Sheet into a Kling video queue and keeps all your Kling accounts busy. Each row is one Kling 4.0 (or v3) video, from text or from a start and end image. It runs through the [useapi.net Kling API](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api), a third-party API, not affiliated with Kuaishou Technology or Kling AI, on the Kling accounts you connect there. It is built from core n8n nodes, with no community nodes.
+[`kling-sheet-batch.json`](./kling-sheet-batch.json) is a ready-to-import [n8n](https://n8n.io) workflow that turns a Google Sheet into a Kling video queue and keeps all your Kling accounts busy. Each row is one Kling 4.0, Kling 4.0 Flash (`kling-v4-0-flash`, 720p, 3 to 20 seconds, start image only) or v3 video, from text or from a start and end image. It runs through the [useapi.net Kling API](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api), a third-party API, not affiliated with Kuaishou Technology or Kling AI, on the Kling accounts you connect there. It is built from core n8n nodes, with no community nodes.
 
 One useapi.net subscription connects 3 Kling accounts for $15 a month, and each extra 3 cost $10 a month, so 10 accounts cost $45 a month and 30 cost $105 (as of October 2026). See [Run several Kling accounts](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api#run-several-kling-accounts).
 
