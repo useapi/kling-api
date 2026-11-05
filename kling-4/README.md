@@ -6,6 +6,8 @@ Full walkthrough: [How to Generate Kling 4.0 Video via the Kling API](https://us
 
 See it run: [four 9:16 clips with sound, made with this script](https://youtube.com/shorts/Xr73upGKG2c) (YouTube Short, 45 credits each on Kling Pro during Kling's launch discount for subscribers)
 
+Kling 4.0 Flash: [a 10-second cinematic clip with sound](https://youtu.be/EGWY2mJ5yOk) from one prompt (`kling-v4-0-flash`, 720p, 16:9), 60 credits or $0.61 on Kling Premier (November 5, 2026)
+
 `kling4.mjs` reads prompts from `prompts.json`, checks every prompt against the Kling 4.0 or 4.0 Flash limits before it spends any credits, and submits each one to [`POST /videos/text2video`](https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api), or to [`POST /videos/image2video-frames`](https://useapi.net/docs/api-kling-v1/post-kling-videos-image2video-frames?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) when the prompt has an `image` or `image_tail`. Local image files are uploaded first with [`POST /assets`](https://useapi.net/docs/api-kling-v1/post-kling-assets?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api). It then polls [`GET /tasks/{task_id}`](https://useapi.net/docs/api-kling-v1/get-kling-tasks-task_id?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) until each task is final and downloads every MP4, preferring the clean, non-watermarked master via [`GET /assets/download`](https://useapi.net/docs/api-kling-v1/get-kling-assets-download?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) (paid Kling AI subscriptions) and falling back to the watermarked `works[0].resource.resource`.
 
 ## Prerequisites
