@@ -142,6 +142,11 @@ async function submitImage(apiToken, email, prompt, index) {
             case 429:
                 console.log(`🔄️ Retry on HTTP ${createResponse.status} (all accounts at capacity)`);
                 break;
+            case 412:
+                // TASK.PointNotEnough: Kling refused the job before creating a task, so nothing is charged.
+                console.log(`🛑 Kling account out of credits, nothing was created (add credits on kling.ai)`, createBody);
+                await fs.appendFile(ERRORS_FILE, `${createResponse.status},#${index}:${text}\n`);
+                break;
             case 400:
                 console.log(`🛑 Validation error`, createBody);
                 await fs.appendFile(ERRORS_FILE, `${createResponse.status},#${index}:${text}\n`);
@@ -359,6 +364,10 @@ async function execute(apiToken, email, promptFile) {
         let retries429 = 0;
         while (true) {
             const { status } = await submitImage(apiToken, email, prompt, i + 1);
+            if (status == 412) {
+                console.error(`⛔ Stopped at prompt #${i + 1}: Kling account ${email} is out of credits, so the remaining prompts would fail too. Add credits on kling.ai and run again.`);
+                return;
+            }
             if (status == 429) {
                 if (++retries429 > MAX_429_RETRIES) {
                     console.error(`⛔ Gave up on prompt #${i + 1} after ${MAX_429_RETRIES} retries — all accounts still busy.`);
