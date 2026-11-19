@@ -1,6 +1,6 @@
 /*
 
-Script version 1.0, November 18, 2026
+Script version 1.0, November 19, 2026
 
 Script to batch-generate Kling Image 4.0 images using prompts with the Kling API v1 by useapi.net 🚀
 Uses the asynchronous Omni image endpoint (POST /images/omni) with omni_version v4.
@@ -44,7 +44,7 @@ This command executes the script using API token user:1234-abcdefhijklmnopqrstuv
 Changelog:
 ==========
 
-- November 18, 2026: Initial release.
+- November 19, 2026: Initial release.
 
 */
 
