@@ -1,0 +1,48 @@
+[
+    {
+        "__note": "8K photo, 16:9 (10880 x 6144 pixels). 8k and 4k need a paid Kling plan",
+        "prompt": "Macro photograph of a hummingbird hovering at a red trumpet flower at sunrise, every iridescent feather sharp, dew drops on the petals, soft golden backlight, shallow depth of field",
+        "resolution": "8k",
+        "aspect_ratio": "16:9"
+    },
+    {
+        "__note": "Series Mode from the prompt alone: imageCount left out, so Kling decides how many images the story needs (2 to 10)",
+        "prompt": "A picture-book story in consistent watercolor style: a small paper boat is folded by a child on a rainy city street, floats down the gutter, slips into a river past old bridges, and finally reaches the open sea at sunset",
+        "story_mode": true,
+        "aspect_ratio": "4:3"
+    },
+    {
+        "__note": "A tone preset (ids from GET /images/presets)",
+        "prompt": "@tone:Nostalgic_Wuxia A lone swordsman in a bamboo forest at dawn, mist between the stalks, wide cinematic shot",
+        "aspect_ratio": "16:9"
+    },
+    {
+        "__note": "A font preset for the quoted text",
+        "prompt": "A cozy corner coffee shop at night, warm light spilling onto a wet cobblestone street, a hand-painted shop sign above the door that reads @font:elegant_brush_hand \"Moonlight Roasters\"",
+        "aspect_ratio": "3:2"
+    },
+    {
+        "__note": "A style preset",
+        "prompt": "@style:3d_cartoon_with_exaggerated_perspective_pro A corgi astronaut stepping out of a tiny rocket onto a candy-colored planet, looking up at the camera",
+        "aspect_ratio": "1:1"
+    },
+    {
+        "__note": "A product photo: use its URL as image_1 of the product_detail prompt below",
+        "prompt": "Studio product photo of a matte sage-green insulated steel water bottle with a bamboo lid, on a light stone surface, soft daylight, clean white background, e-commerce catalog style",
+        "aspect_ratio": "3:4"
+    },
+    {
+        "__note": "Skill product_detail: one long product page. Replace image_1 with your product photo (POST /assets, or a Kling image URL)",
+        "prompt": "Insulated steel water bottle \"Trailhead\": keeps drinks cold 24 hours and hot 12, leak-proof bamboo lid, fits car cup holders, 750 ml, three colors",
+        "skill": "product_detail",
+        "length": "short",
+        "resolution": "2k",
+        "image_1": "https://s21-kling.klingai.com/ai-platform/.../your-product-photo.png"
+    },
+    {
+        "__note": "Skill web_design: one long landing page design",
+        "prompt": "Landing page for \"Ember & Oak\", a small-batch coffee roaster: warm browns and cream, elegant serif headlines, hero photo of a pour-over, three featured roasts, a monthly subscription offer and customer reviews. All text on the page in English.",
+        "skill": "web_design",
+        "resolution": "2k"
+    }
+]
