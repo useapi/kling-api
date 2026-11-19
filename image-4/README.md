@@ -4,6 +4,8 @@ Batch-generate Kling Image 4.0 images through the [Kling API](https://useapi.net
 
 Full walkthrough: [How to Generate Kling Image 4.0 Images via the Kling API](https://useapi.net/docs/articles/kling-image-4-api?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)
 
+See it run: [the results in a 40-second YouTube Short](https://youtube.com/shorts/w6fuGeWJlNE): the 8K close-up, the Series Mode story, the presets, the product page and the web design, made with these prompts.
+
 `kling-image-4.mjs` reads prompts from `prompts.json`, checks every prompt before it spends any credits, submits each one to [`POST /images/omni`](https://useapi.net/docs/api-kling-v1/post-kling-images-omni?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) with `omni_version: v4`, waits for each task and downloads every image.
 
 ## Prerequisites
