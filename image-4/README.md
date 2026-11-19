@@ -39,7 +39,7 @@ Kling writes a `web_design` page's text in Chinese unless the prompt names the l
 
 ## What it costs
 
-Kling Image 4.0 uses your Kling AI subscription's credits: 4 an image at 2K, 6 at 4K and 10 at 8K, the same in Series Mode. A product detail page is 15 to 55 credits and a web design 35 at 1K or 38 at 2K. On Kling's Pro subscription ($32.56 a month for 3,000 credits) a 2K image costs $0.04 and an 8K one $0.11, against $0.061 and $0.154 on Kling's developer API, which sells Kling Image 4.0 in image packs from $300 and charges for each reference image as well (as of November 18, 2026). The prompts in `prompts.json` made 13 images and pages for 102 credits in our run, with 8K at Kling's sale price of 6.
+Kling Image 4.0 uses your Kling AI subscription's credits: 4 an image at 2K, 6 at 4K and 10 at 8K, the same in Series Mode. A product detail page is 15 to 55 credits and a web design 35 at 1K or 38 at 2K. On Kling's Pro subscription ($32.56 a month for 3,000 credits) a 2K image costs $0.04 and an 8K one $0.11, against $0.06 and $0.15 on Kling's developer API, which sells Kling Image 4.0 in image packs from $300 and charges for each reference image as well (as of November 18, 2026). The prompts in `prompts.json` made 13 images and pages for 102 credits in our run, with 8K at Kling's sale price of 6.
 
 ---
 
