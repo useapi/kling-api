@@ -1,6 +1,6 @@
 /*
 
-Script version 1.1, November 5, 2026
+Script version 1.2, November 19, 2026
 
 Script to batch-generate videos using prompts with the Kling API v1 by useapi.net 🚀
 Uses the asynchronous Omni endpoint (POST /videos/omni): multi-image reference,
@@ -45,6 +45,7 @@ Changelog:
 - June 22, 2026: Initial release.
 - November 5, 2026: omni_version is checked (o1, v3, v4, v4-flash). v4 and v4-flash take prompts up to
   8000 characters; v4 runs 3-30s and v4-flash 3-20s at std (720p) only. Multi-shot is v3 only.
+- November 19, 2026: v4 also runs in 4K (mode 4k), and hdr: true makes HDR video on v4 with mode pro or 4k.
 
 */
 
@@ -98,12 +99,13 @@ function promptLabel(prompt) {
 // Multi-shot: an array of { prompt, duration } in prompt.shots → shot_N_prompt / shot_N_duration.
 // Single-shot: prompt + optional duration. Both carry image_N / element_N references.
 function buildBody(email, prompt) {
-    const { prompt: text, omni_version, mode, aspect_ratio, duration, count, shots } = prompt;
+    const { prompt: text, omni_version, mode, hdr, aspect_ratio, duration, count, shots } = prompt;
 
     const body = {
         email,
         omni_version,
         mode,
+        hdr,
         aspect_ratio,
         count
     };
@@ -371,7 +373,7 @@ async function execute(apiToken, email, promptFile) {
 
     // Parameters accepted by this script for the Omni endpoint.
     // See https://useapi.net/docs/api-kling-v1/post-kling-videos-omni for the full parameter set.
-    const baseParams = ['prompt', 'omni_version', 'mode', 'aspect_ratio', 'duration', 'count', 'shots'];
+    const baseParams = ['prompt', 'omni_version', 'mode', 'hdr', 'aspect_ratio', 'duration', 'count', 'shots'];
     const refParams = (n) => [`image_${n}`, `element_${n}`];
     const supportedParams = [...baseParams, ...[1, 2, 3, 4, 5, 6, 7].flatMap(refParams)];
 
@@ -379,7 +381,7 @@ async function execute(apiToken, email, promptFile) {
 
     // Version limits, see https://useapi.net/docs/api-kling-v1/post-kling-videos-omni
     const versions = ['o1', 'v3', 'v4', 'v4-flash'];
-    const v4Limits = { 'v4': { max: 30, modes: ['std', 'pro'] }, 'v4-flash': { max: 20, modes: ['std'] } };
+    const v4Limits = { 'v4': { max: 30, modes: ['std', 'pro', '4k'], hdr: true }, 'v4-flash': { max: 20, modes: ['std'] } };
 
     for (let i = 1; i <= prompts.length; i++) {
         const prompt = prompts[i - 1];
@@ -411,6 +413,16 @@ async function execute(apiToken, email, promptFile) {
                 warnings.push(`duration must be 3 to ${v4.max} seconds with ${version}. Prompt ${i}`);
             if (mode !== undefined && !v4.modes.includes(mode))
                 warnings.push(`mode must be ${v4.modes.join(' or ')} with ${version}. Prompt ${i}`);
+        }
+
+        // HDR: v4 only, with mode pro (1080p) or 4k
+        if (prompt.hdr !== undefined) {
+            if (typeof prompt.hdr !== 'boolean')
+                warnings.push(`hdr must be true or false. Prompt ${i}`);
+            else if (!v4?.hdr)
+                warnings.push(`hdr is v4 only, not ${version}. Prompt ${i}`);
+            else if (prompt.hdr && !['pro', '4k'].includes(mode ?? 'std'))
+                warnings.push(`hdr needs mode pro or 4k (no HDR at 720p). Prompt ${i}`);
         }
 
         if (hasShots) {

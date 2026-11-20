@@ -1,6 +1,6 @@
 /*
 
-Script version 1.2, November 5, 2026
+Script version 1.3, November 19, 2026
 
 Script to batch-generate videos using prompts with the Kling API v1 by useapi.net 🚀
 Defaults to the kling-v1-6 model and uses the asynchronous text2video endpoint.
@@ -39,6 +39,7 @@ Changelog:
 - June 22, 2026: Initial release.
 - October 18, 2026: Kling 4.0 (kling-v4-0) prompts, 3-30s, up to 8000-character prompts.
 - November 5, 2026: Kling 4.0 Flash (kling-v4-0-flash) prompts, 3-20s, 720p (std) only, up to 8000-character prompts.
+- November 19, 2026: Kling 4.0 in 4K (mode 4k) and the hdr param (true: HDR video, kling-v4-0 with mode pro or 4k).
 
 */
 
@@ -84,7 +85,7 @@ async function fetchAccounts(apiToken) {
 
 // Submit a single text-to-video prompt. Returns { status, taskId }.
 async function submitVideo(apiToken, email, prompt, index) {
-    const { model_name, prompt: text, aspect_ratio, mode, duration, negative_prompt, cfg_scale } = prompt;
+    const { model_name, prompt: text, aspect_ratio, mode, hdr, duration, negative_prompt, cfg_scale } = prompt;
 
     const useModel = model_name ?? DEFAULT_MODEL;
 
@@ -96,6 +97,7 @@ async function submitVideo(apiToken, email, prompt, index) {
         prompt: text,
         aspect_ratio,
         mode,
+        hdr,
         duration,
         negative_prompt,
         cfg_scale
@@ -335,7 +337,7 @@ async function execute(apiToken, email, promptFile) {
 
     // Parameters accepted by this script for the text2video endpoint.
     // See https://useapi.net/docs/api-kling-v1/post-kling-videos-text2video for the full parameter set.
-    const supportedParams = ['model_name', 'prompt', 'aspect_ratio', 'mode', 'duration', 'negative_prompt', 'cfg_scale'];
+    const supportedParams = ['model_name', 'prompt', 'aspect_ratio', 'mode', 'hdr', 'duration', 'negative_prompt', 'cfg_scale'];
 
     const invalidKeys = (prompt) => Object.keys(prompt).filter(key => !key.startsWith('__') && !supportedParams.includes(key))
 
