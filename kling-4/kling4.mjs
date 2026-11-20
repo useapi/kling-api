@@ -1,11 +1,12 @@
 /*
 
-Script version 1.1, November 5, 2026
+Script version 1.2, November 19, 2026
 
 Script to batch-generate Kling 4.0 (kling-v4-0) and Kling 4.0 Flash (kling-v4-0-flash) videos
 with the Kling API v1 by useapi.net.
 Text-to-video (one prompt, or up to 6 directed shots) and image-to-video with a start frame,
 an optional end frame and up to 9 keyframes in between.
+Kling 4.0 also makes 4K ("mode": "4k") and HDR video ("hdr": true, with mode pro or 4k) on a paid Kling plan.
 Kling 4.0 Flash: set "model_name": "kling-v4-0-flash" in a prompt. 720p (std) only, 3 to 20 seconds,
 no multi-shot, and image-to-video from the start frame only (no keyframes or end frame).
 Tutorial: https://useapi.net/docs/articles/kling-4-api
@@ -45,6 +46,8 @@ Changelog:
 - October 18, 2026: Initial release.
 - November 5, 2026: Kling 4.0 Flash (kling-v4-0-flash) with an optional per-prompt model_name
   (default kling-v4-0), checked against its limits: 720p (std) only, 3-20s, start frame only, no multi-shot.
+- November 19, 2026: Kling 4.0 in 4K (mode 4k) and HDR video (hdr true, mode pro or 4k; not on Flash).
+  The downloaded master is the 4K / HDR file.
 
 */
 
@@ -75,7 +78,8 @@ const urlAssetsDownload = 'https://api.useapi.net/v1/kling/assets/download';
 
 // Kling 4.0 limits, see the endpoint pages above.
 const DURATION_MIN = 3, DURATION_MAX = 30, DURATION_DEFAULT = 5;
-const MODES = ['std', 'pro'];                       // std = 720p, pro = 1080p (paid Kling plan)
+const MODES = ['std', 'pro', '4k'];                 // std = 720p, pro = 1080p, 4k = 4K (pro and 4k: paid Kling plan)
+const HDR_MODES = ['pro', '4k'];                    // hdr: true needs 1080p or 4K (Kling 4.0 only)
 // Kling 4.0 Flash: 720p only, 3 to 20 seconds, start frame only (no image_tail, keyframes or multi-shot).
 const FLASH_DURATION_MAX = 20;
 const FLASH_MODES = ['std'];
@@ -85,7 +89,7 @@ const MAX_SHOTS = 6, MAX_SHOT_PROMPT = 2500, SHOTS_TOTAL_MIN = 3, SHOTS_TOTAL_MA
 const MAX_KEYFRAMES = 9, MAX_IMAGES = 10;
 const IMAGE_TYPES = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg' };
 
-const supportedParams = ['model_name', 'prompt', 'mode', 'duration', 'aspect_ratio', 'multi_shot', 'image', 'image_tail', 'replyUrl', 'replyRef',
+const supportedParams = ['model_name', 'prompt', 'mode', 'hdr', 'duration', 'aspect_ratio', 'multi_shot', 'image', 'image_tail', 'replyUrl', 'replyRef',
     ...Array.from({ length: MAX_SHOTS }, (_, i) => [`shot_${i + 1}_prompt`, `shot_${i + 1}_duration`]).flat(),
     ...Array.from({ length: MAX_KEYFRAMES }, (_, i) => `keyframe_${i + 1}`)];
 
@@ -342,6 +346,15 @@ function validate(prompt, i) {
 
     if (prompt.mode !== undefined && !modes.includes(prompt.mode))
         w(`mode must be one of ${modes.join(', ')}${isFlash ? ' (Kling 4.0 Flash makes 720p only)' : ''}`);
+
+    if (prompt.hdr !== undefined) {
+        if (typeof prompt.hdr !== 'boolean')
+            w(`hdr must be true or false`);
+        else if (isFlash)
+            w(`Kling 4.0 Flash takes no hdr (720p only)`);
+        else if (prompt.hdr && !HDR_MODES.includes(prompt.mode ?? 'std'))
+            w(`hdr needs mode ${HDR_MODES.join(' or ')} (no HDR at 720p)`);
+    }
 
     if (isFlash) {
         if (prompt.multi_shot !== undefined)
