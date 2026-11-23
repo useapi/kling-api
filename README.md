@@ -31,6 +31,8 @@ node ./kling.mjs <API_TOKEN> <EMAIL>
 
 ## MCP server
 
+[![Kling MCP connector](https://glama.ai/mcp/connectors/net.useapi/kling/badges/score.svg)](https://glama.ai/mcp/connectors/net.useapi/kling)
+
 useapi.net also runs a hosted [Model Context Protocol](https://modelcontextprotocol.io) server for Kling, so an AI assistant such as Claude Code, Cursor or VS Code Copilot can use it with your Kling AI subscription. It has 46 tools: Kling 4.0, 4.0 Flash, v3 and Omni video from text, images, keyframes or references, motion control, talking avatars, lip-sync, sound and extend, Omni and Kolors images, virtual try-on, upscale, plus elements, voices, avatars, uploads and tasks. Nothing to install or run locally.
 
 - Endpoint: `https://api.useapi.net/v1/kling/mcp`
