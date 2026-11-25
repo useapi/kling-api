@@ -362,7 +362,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "cellFormat": "RAW"
+        }
       },
       "name": "Append rows",
       "type": "n8n-nodes-base.googleSheets",
@@ -998,7 +1000,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "cellFormat": "RAW"
+        }
       },
       "name": "Update row",
       "type": "n8n-nodes-base.googleSheets",
