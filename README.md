@@ -124,9 +124,13 @@ More answers: [Kling API questions](https://useapi.net/docs/api-kling-v1?utm_sou
 
 useapi.net 是第三方 API，与快手科技及可灵 AI 无关联。
 
+可灵现在能用吗？查看[状态页面](https://useapi.net/status?api=kling&utm_source=github.com&utm_medium=referral&utm_campaign=kling-api)。
+
 ## About useapi.net
 
 [useapi.net](https://useapi.net/?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) is a third-party REST API for AI services. The Kling API runs on your [Kling AI subscription](https://kling.ai/app/membership/membership-plan), so each video costs its share of the subscription's credits instead of a prepaid developer pack. See the models and prices on the [Kling API overview](https://useapi.net/docs/api-kling-v1?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api) and every service in the [model matrix](https://useapi.net/model-matrix?utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
+
+Is Kling working right now? See the [status page](https://useapi.net/status?api=kling&utm_source=github.com&utm_medium=referral&utm_campaign=kling-api).
 
 Visit our [Discord Server](https://discord.gg/w28uK3cnmF) or [Telegram Channel](https://t.me/use_api) for any support questions and concerns.
 
